@@ -23,9 +23,9 @@ class Game
 	void EndApp();
 	Camera m_cam;
 	WorldGrid m_grid;
-	std::mt19937 rng;
 	std::unique_ptr<MainMenu> m_MainMenu;
 	std::unique_ptr<SpriteSheet> m_gamePieces;
+	std::unique_ptr<SpriteSheet> m_gameBases;
 	std::unique_ptr<ItemsSelector> m_itemSelector;
 	std::vector<std::unique_ptr<MoveableObject>> m_moveableObj;
 	std::unordered_map<std::string, SoundEffect> m_soundFX;
@@ -43,7 +43,8 @@ public:
 	////////////////////////////////////
 
 private:
-	XMFLOAT2 m_ScreenSize;
-	XMFLOAT2 m_ScreenCenter;
+	
 	void FindPath();
+	bool LoadMap(const int& index, const std::wstring textureFilename);
+	bool LoadImages();
 };

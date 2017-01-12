@@ -16,10 +16,10 @@ void Game::LoadSounds()
 	m_soundFX["newitems"] = SoundEffect({ L"media\\newitems.wav" });
 	m_soundFX["baseunderattack"] = SoundEffect({ L"media\\baseunderattack.wav" });
 	m_soundFX["constructionstarted"] = SoundEffect({ L"media\\constuctionstarted.wav" });
-	m_soundFX["constructioncaomplete"] = SoundEffect({ L"media\\constuctionCompleted.wav" });
+	m_soundFX["constructioncomplete"] = SoundEffect({ L"media\\constuctionCompleted.wav" });
 	m_soundFX["unitrepaired"] = SoundEffect({ L"media\\unitrepaired.wav" });
 	m_soundFX["newunitsavailable"] = SoundEffect({ L"media\\newunit.wav" });
-	//what the
+	
 }
 
 Game::Game(Direct3DWindow & wnd)
@@ -29,14 +29,14 @@ Game::Game(Direct3DWindow & wnd)
 	gfx(wnd.ScreenWidth(),wnd.ScreenHeight(),wnd.WindowHandle(),
 		true, FULL_SCREEN,1000.0f,0.01f),
 	m_cam((float)wnd.ScreenWidth(), (float)wnd.ScreenHeight() - 128),
-	m_grid(m_cam),
-	rng(std::random_device()())
+	m_grid(m_cam)
 {
 	LoadSounds();
-	m_grid.LoadMap("map0.txt", L"media\\test.png");
+	LoadMap(0, L"media\\test.png");
 	m_cam.ConfineToMap(RectF(0.0f, 0.0f, m_grid.Width(), m_grid.Height()));
+	
 	m_MainMenu = std::make_unique<MainMenu>(Vec2f((float)window.ScreenWidth() / 2, (float)window.ScreenHeight() / 2), 800.0f, 600.0f);
-	m_gamePieces = std::make_unique<SpriteSheet>(L"media\\test.png", 64.0f, 64.0f);
+	
 	
 	m_itemSelector = std::make_unique<ItemsSelector>(m_gamePieces.get(),
 		(float)window.ScreenWidth(), (float)window.ScreenHeight(), 128.0f);
@@ -120,8 +120,6 @@ HRESULT Game::ConstructScene(const float& deltaTime)
 			
 		if (input.MouseLeftClick())
 		{
-			
-			
 			int result = m_MainMenu->OnMouseClick(input.GetMousePos().x, input.GetMousePos().y);
 			if (result != -1)
 			{
@@ -169,4 +167,18 @@ HRESULT Game::RenderScene()
 void Game::FindPath()
 {
 	
+}
+
+bool Game::LoadMap(const int & index,const std::wstring textureFilename)
+{
+	std::string filename = "map" + std::to_string(index) + ".txt";
+	m_grid.LoadMap("map0.txt", textureFilename);
+	return false;
+}
+
+bool Game::LoadImages()
+{
+	m_gamePieces = std::make_unique<SpriteSheet>(L"media\\test.png", 64.0f, 64.0f);
+	m_gameBases = std::make_unique<SpriteSheet>(L"media\\bases.png", 128.0f, 128.0f);
+	return false;
 }
