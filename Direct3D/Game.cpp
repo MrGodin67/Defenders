@@ -19,7 +19,7 @@ void Game::LoadSounds()
 	m_soundFX["constructioncaomplete"] = SoundEffect({ L"media\\constuctionCompleted.wav" });
 	m_soundFX["unitrepaired"] = SoundEffect({ L"media\\unitrepaired.wav" });
 	m_soundFX["newunitsavailable"] = SoundEffect({ L"media\\newunit.wav" });
-	//what
+	//what the
 }
 
 Game::Game(Direct3DWindow & wnd)
