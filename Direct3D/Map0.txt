@@ -1,0 +1,33 @@
+4096 2048 32 64 64 64
+(--------------------------------------------------------------)
+|TTTTT                            TTT                          |
+|TTTT  RR RTT     TTTTT             T                          |
+|TT     R  TT              SSSSSS      RRR                     |
+|       RRRR  WWWWW      SSSWWWWSS       RRR                   |
+|                 RRR    SWWWWWWWSSSS                          |
+|            TTTT   T    SSSSWWWWWWWS                          |
+|            T      TTTTT   SSSSSSSSS                          |
+|  TTTTT     T    TTT         TTTT                             |
+|  T   T   RTT     T        TTTTTTTTTT                         |
+|  T   TTTTR     T T          TTTTT  T          WW             |
+|TTTTW     R     TTTTT          RRR         WWWWWWW            |
+|    W     W   TTT  TT       RRRRRR            WWW             |
+|    WWW WWW         T                                         |
+|              TT    T                                         |
+|   TTTTT  R            RRRRR                                  |
+|   T        RRRRR   R                                         |
+|        TTTTT                                                 |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+<-------------------------------------------------------------->

@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{c7179e4f-fa6a-414d-b355-c27dd7b58c5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{870e5310-3f94-4f4f-836d-c3c822ba1d5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Camera">
+      <UniqueIdentifier>{e19e8b7e-e1bc-4411-a99a-6e0a17a5134c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Input">
+      <UniqueIdentifier>{aa110c9f-71bb-4135-a102-b3d37f709b03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Timer">
+      <UniqueIdentifier>{5d2b2764-a1b0-4267-80e2-237fcba1895b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\World">
+      <UniqueIdentifier>{20427230-b01a-48ab-9f59-25c4815b8109}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Tile">
+      <UniqueIdentifier>{09a1e15f-2e1a-4989-a110-d068a63b6ff1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Maps">
+      <UniqueIdentifier>{bc440fd8-2ce6-4df2-bdfc-2c83afbf3c2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Texture">
+      <UniqueIdentifier>{a5108359-2c16-4f69-bf8b-c5f7e97d845e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Entity">
+      <UniqueIdentifier>{da8175b6-37ec-4e23-ac17-ff3a39d6552a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Sprite">
+      <UniqueIdentifier>{b2aa08bd-88db-4d7f-8a58-307f5c32f7be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Game Pieces">
+      <UniqueIdentifier>{99bbebbd-f712-4549-8f9b-f64608f3363c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\UI">
+      <UniqueIdentifier>{949f8eca-12a1-4538-8384-2509a14d4ccc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\UI\Main Menu">
+      <UniqueIdentifier>{0321cbb8-2169-4c9c-b8d4-8ec8d373b7e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Sound">
+      <UniqueIdentifier>{f20f7e9b-d6e5-45af-97ab-501dd7f33133}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Direct3DWindow.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Direct3D_2D.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="DrrectWrite.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleTimer.cpp">
+      <Filter>Objects\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiliKeyboard.cpp">
+      <Filter>Objects\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldGrid.cpp">
+      <Filter>Objects\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
+      <Filter>Objects\Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="D2D1Texture.cpp">
+      <Filter>Objects\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteSheet.cpp">
+      <Filter>Objects\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Locator.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Objects\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveableObject.cpp">
+      <Filter>Objects\Game Pieces</Filter>
+    </ClCompile>
+    <ClCompile Include="AStar.cpp">
+      <Filter>Objects\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Objects\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>Objects\UI\Main Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Engine\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="DXErr.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemSelector.cpp">
+      <Filter>Objects\UI</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Direct3DWindow.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Direct3D_2D.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXTex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectWrite.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Objects\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="keyboard.h">
+      <Filter>Objects\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="mouse.h">
+      <Filter>Objects\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleTimer.h">
+      <Filter>Objects\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiliKeyboard.h">
+      <Filter>Objects\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Table.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldGrid.h">
+      <Filter>Objects\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>Objects\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D2D1Texture.h">
+      <Filter>Objects\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteSheet.h">
+      <Filter>Objects\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Locator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="viewport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityInterface.h">
+      <Filter>Objects\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Objects\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveableObject.h">
+      <Filter>Objects\Game Pieces</Filter>
+    </ClInclude>
+    <ClInclude Include="AStar.h">
+      <Filter>Objects\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Objects\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemSelector.h">
+      <Filter>Objects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Objects\UI\Main Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Engine\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundEffect.h">
+      <Filter>Engine\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiliException.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="DXErr.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiliWin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Map0.txt">
+      <Filter>Objects\Maps</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
