@@ -20,6 +20,5 @@ public:
 	bool MouseMiddleDown() { return m_mouse.MiddleBtnDown(); }
 	bool KeyPress(unsigned char key) { return m_keyboard.KeyIsPressed(key); }
 	bool AnyKeyPressed() { return !m_keyboard.CharIsEmpty(); }
-	XMFLOAT2 GetMouseDelta() { return m_mouse.Delta(); }
-	XMFLOAT2 GetMousePos() { return m_mouse.MousePos(); }
+	Vec2i GetMousePos() { return m_mouse.MousePos(); }
 };

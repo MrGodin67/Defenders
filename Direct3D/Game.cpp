@@ -32,6 +32,7 @@ Game::Game(Direct3DWindow & wnd)
 	m_grid(m_cam)
 {
 	LoadSounds();
+	LoadImages();
 	LoadMap(0, L"media\\test.png");
 	m_cam.ConfineToMap(RectF(0.0f, 0.0f, m_grid.Width(), m_grid.Height()));
 	
@@ -69,7 +70,7 @@ HRESULT Game::ConstructScene(const float& deltaTime)
 			m_gameState = _GameState::paused;
 
 		Vec2f scroll(0.0f, 0.0f);
-		float d;
+		
 		
 
 		if (input.KeyPress('A'))
@@ -100,7 +101,7 @@ HRESULT Game::ConstructScene(const float& deltaTime)
 			float d = 0.0f;
 			m_soundFX["newitems"].Play(d, 1.0f);
 			std::vector<Vec2f> pts;
-			Vec2f mp = Vec2f(input.GetMousePos().x, input.GetMousePos().y);
+			Vec2f mp = Vec2f((float)input.GetMousePos().x, (float)input.GetMousePos().y);
 			mp = m_cam.ConvertToWorldSpace(mp);
 			Vec2f s = m_grid.GetCellIndex(m_moveableObj[0]->GetCenter());
 			Vec2f e = m_grid.GetCellIndex(mp);
