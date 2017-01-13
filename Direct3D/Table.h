@@ -40,7 +40,10 @@ public:
 	{
 		return m_Container[index];
 	}
-
+	T& operator()(int index)
+	{
+		return m_Container[index];
+	}
 	typedef typename std::vector<T>::iterator iter;
 	typedef typename std::vector<T>::const_iterator citer;
 

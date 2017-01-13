@@ -9,6 +9,7 @@ class Tile
 private:
 	Sprite m_image;
 	bool m_passable;
+
 private:
 	static float ms_width;
 	static float ms_height;
@@ -18,6 +19,8 @@ public:
 	void draw(class Graphics& gfx,class Camera& cam);
 	bool Passable() { return m_passable; }
 	void Passable(bool canPass) { m_passable = canPass; }
+	RectF GetRect();
+	Vec2f GetWorldPosition();
 public:
 	static void SetWidthHeight(const float& w, const float& h);
 	static float Height();

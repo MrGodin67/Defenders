@@ -15,6 +15,7 @@ Tile::Tile(SpriteSheet * image, const int & imageIndex, const Vec2f & pos, bool 
 	:m_image(image,imageIndex,ms_width,ms_height,pos),
 	m_passable(passable)
 {
+	
 }
 
 void Tile::draw(Graphics & gfx,Camera& cam)
@@ -22,6 +23,18 @@ void Tile::draw(Graphics & gfx,Camera& cam)
 	m_image.TransformToCamera(cam.GetPos());
 	m_image.Draw(gfx);
 }
+
+RectF Tile::GetRect()
+{
+	return m_image.GetAABB();
+}
+
+Vec2f Tile::GetWorldPosition()
+{
+	return m_image.GetPosition();
+}
+
+
 
 void Tile::SetWidthHeight(const float & w, const float & h)
 {

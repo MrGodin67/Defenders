@@ -147,6 +147,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AStar.cpp" />
+    <ClCompile Include="Bases.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ChiliKeyboard.cpp" />
     <ClCompile Include="D2D1Texture.cpp" />
@@ -170,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AStar.h" />
+    <ClInclude Include="Bases.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ChiliException.h" />
     <ClInclude Include="ChiliKeyboard.h" />
@@ -195,6 +197,7 @@
     <ClInclude Include="SimpleTimer.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="SoundEffect.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="Table.h" />

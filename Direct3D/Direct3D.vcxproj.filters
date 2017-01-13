@@ -58,6 +58,9 @@
     <Filter Include="Engine\Sound">
       <UniqueIdentifier>{f20f7e9b-d6e5-45af-97ab-501dd7f33133}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Objects\Bases">
+      <UniqueIdentifier>{638da5f5-79f4-447e-a151-4fcb1019150f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -122,6 +125,9 @@
     </ClCompile>
     <ClCompile Include="ItemSelector.cpp">
       <Filter>Objects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Bases.cpp">
+      <Filter>Objects\Bases</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -226,6 +232,12 @@
     </ClInclude>
     <ClInclude Include="ChiliWin.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bases.h">
+      <Filter>Objects\Bases</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>Engine\Sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -123,20 +123,81 @@ void WorldGrid::Draw(Graphics & gfx, RectF& viewport)
 
 		}
 	}
+	D2D1_COLOR_F color;
+	m_basePlacementTiles.size() == 4 ? color = { 0.0f,1.0f,0.0f,0.25f } : color = { 1.0f,0.0f,0.0f,0.25f };
+	for (int d = 0; d < m_basePlacementTiles.size(); d++)
+	{
+		gfx.DrawFilledScreenRectangle(m_basePlacementTiles[d]->GetRect().ToD2D(), color);
+	}
+
 }
 
-bool WorldGrid::FindPath(Vec2f& startPt,Vec2f& endPt,std::vector<Vec2f>& newPath)
+bool WorldGrid::FindPath(Vec2i& startPt,Vec2i& endPt,std::vector<Vec2f>& newPath)
 {
 	pathFinding.Reset();
-	if (m_cells((int)endPt.y, (int)endPt.x).Passable())
+	if (m_cells(endPt.y, endPt.x).Passable())
 		newPath = pathFinding.findPath(startPt, endPt);
 	else
 		return false;
 	
+	if (newPath.size() <= 1)
+		return false;
+
 	return true;
 }
 
-Vec2f WorldGrid::GetCellIndex(Vec2f& worldPoint)
+Vec2i WorldGrid::GetCellIndex(Vec2f& worldPoint)
 {
-	return Vec2f(worldPoint.x / (float)m_cellWidth, worldPoint.y / (float)m_cellHeight);
+	return Vec2i((int)(worldPoint.x / (float)m_cellWidth), (int)(worldPoint.y / (float)m_cellHeight));
+}
+
+void WorldGrid::SetBasePlacementTiles(const Vec2i & mousePos)
+{
+	Vec2f mp = Vec2f(mousePos);
+	
+	mp +=  m_cam.GetPos();
+	if (m_cam.PointInViewFrame(mp, Vec2f(0.0f, 0.0f)))
+	{
+
+		int row = mp.y / m_cellHeight;
+		int col = mp.x / m_cellWidth;
+		m_basePlacementTiles.clear();
+		for (int r = row; r < row + 2; r++)
+		{
+			for (int c = col; c < col + 2; c++)
+			{
+				if (m_cells(r, c).Passable())
+				{
+					m_basePlacementTiles.push_back(&m_cells(r, c));
+					
+				}
+			}
+		}
+	}
+}
+
+bool WorldGrid::SetBase(Vec2i pos, Tile& start_tile)
+{
+	if (m_basePlacementTiles.size() != 4)
+		return false;
+	int row = pos.y / m_cellHeight;
+	int col = pos.x / m_cellWidth;
+	
+	m_basePlacementTiles.clear();
+	for (int r = row; r < row + 2; r++)
+	{
+		for (int c = col; c < col + 2; c++)
+		{
+			
+			m_cells(r, c).Passable(false);
+			if (r == row && c == col)
+			{
+				start_tile = m_cells(r, c);
+				continue;
+			}
+			pathFinding.getNode(Vec2i(c, r))->s_style = 0;
+		
+		}
+	}
+	return true;
 }

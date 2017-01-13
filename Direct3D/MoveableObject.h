@@ -12,7 +12,7 @@ protected:
 	bool m_pathFinished = false;
 	
 private:
-	bool CheckWaypointArrival();
+	bool CheckWaypointArrival(const float& dt);
 public:
 	
 	MoveableObject(SpriteSheet* image, int imageIndex, float width, float height, float& speed,Vec2f pos);

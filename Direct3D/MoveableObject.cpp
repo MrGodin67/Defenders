@@ -1,13 +1,12 @@
 #include "MoveableObject.h"
-
-bool MoveableObject::CheckWaypointArrival()
+#include "Utils.h"
+bool MoveableObject::CheckWaypointArrival(const float& dt)
 {
 	if (!m_pathFinished && m_wayPointIndex != -1)
 	{
-		
-
+		m_angle = Utils::GetAngleBetweenPoints(m_position, m_wayPoints[m_wayPointIndex]);
 		Vec2f pt = m_wayPoints[m_wayPointIndex] - m_position;
-		if (pt.Len() < m_speed*0.016f)
+		if (pt.LenSq() < (m_speed * m_speed) * (dt*dt))
 		{
 			m_wayPointIndex++;
 			if (m_wayPointIndex >= (int)m_wayPoints.size())
@@ -16,6 +15,7 @@ bool MoveableObject::CheckWaypointArrival()
 				m_wayPointIndex = -1;
 				return false;
 			}
+			
 			m_velocity = (m_wayPoints[m_wayPointIndex] - m_position).Normalize();
 			return true;
 		}
@@ -28,14 +28,14 @@ MoveableObject::MoveableObject(SpriteSheet * image, int imageIndex, float width,
 	m_speed(speed),
 	m_position(pos)
 {
-
+	m_angle = 90.0f;
 }
 
 void MoveableObject::Update(const float & dt)
 {
 	m_position += m_velocity * m_speed * dt;
 	
-	CheckWaypointArrival();
+	CheckWaypointArrival(dt);
 	if (m_pathFinished)
 		m_velocity = Vec2f(0.0f,0.0f);
 }
