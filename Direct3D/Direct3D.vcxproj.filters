@@ -61,6 +61,9 @@
     <Filter Include="Objects\Bases">
       <UniqueIdentifier>{638da5f5-79f4-447e-a151-4fcb1019150f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Managers">
+      <UniqueIdentifier>{eddeab4b-50db-4912-8eec-87e57fc649eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -128,6 +131,12 @@
     </ClCompile>
     <ClCompile Include="Bases.cpp">
       <Filter>Objects\Bases</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityManager.cpp">
+      <Filter>Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -236,8 +245,17 @@
     <ClInclude Include="Bases.h">
       <Filter>Objects\Bases</Filter>
     </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
     <ClInclude Include="SoundManager.h">
-      <Filter>Engine\Sound</Filter>
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityManager.h">
+      <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

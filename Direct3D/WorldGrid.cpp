@@ -64,6 +64,7 @@ void WorldGrid::Create(std::vector<std::string>& map)
 				break;
 			}
 			
+			
 			m_cells(r, c).Passable() ? list.push_back(1) : list.push_back(0);
 
 		}
@@ -97,6 +98,7 @@ void WorldGrid::LoadMap(const std::string& mapfile, const std::wstring& textureF
 	m_cellWidth = atoi(tokens[4].c_str());
 	m_cellHeight = atoi(tokens[5].c_str());
 	Tile::SetWidthHeight((float)m_cellWidth, (float)m_cellHeight);
+	m_visibleMaxLenSq = ((float)Tile::Width() * 7.0f) * ((float)Tile::Width() * 7.0f);
 	m_cells.resize(m_rows, m_columns);
 	mapText.erase(mapText.begin());
 	
@@ -154,7 +156,6 @@ Vec2i WorldGrid::GetCellIndex(Vec2f& worldPoint)
 void WorldGrid::SetBasePlacementTiles(const Vec2i & mousePos)
 {
 	Vec2f mp = Vec2f(mousePos);
-	
 	mp +=  m_cam.GetPos();
 	if (m_cam.PointInViewFrame(mp, Vec2f(0.0f, 0.0f)))
 	{
@@ -182,22 +183,42 @@ bool WorldGrid::SetBase(Vec2i pos, Tile& start_tile)
 		return false;
 	int row = pos.y / m_cellHeight;
 	int col = pos.x / m_cellWidth;
-	
+	start_tile = m_cells(row, col);
 	m_basePlacementTiles.clear();
 	for (int r = row; r < row + 2; r++)
 	{
 		for (int c = col; c < col + 2; c++)
 		{
-			
 			m_cells(r, c).Passable(false);
-			if (r == row && c == col)
-			{
-				start_tile = m_cells(r, c);
-				continue;
-			}
 			pathFinding.getNode(Vec2i(c, r))->s_style = 0;
-		
 		}
 	}
 	return true;
+}
+
+void WorldGrid::SetVisibility(Vec2i pos)
+{
+	int row = pos.y / m_cellHeight;
+	int col = pos.x / m_cellWidth;
+	int r1, c1;
+	for (int r = 0; r < m_visibliltyArray.size(); r++)
+	{
+		r1 = row + m_visibliltyArray[r];
+		if (r1 < 0)r1 = 0;
+		if (r1 > m_rows)r1 = m_rows;
+		for (int c = 0; c < m_visibliltyArray.size(); c++)
+		{
+			c1 = col + m_visibliltyArray[c];
+			if (c1 < 0)c1 = 0;
+			if (c1 > m_columns)c1 = m_columns;
+			if (m_cells(r1, c1).GetVisibleColorAplha() != 0.0f)
+			{
+				float lenSq = (m_cells(r1, c1).GetWorldPosition() - pos).LenSq();
+				float alpha = lenSq / m_visibleMaxLenSq;
+				if (alpha < 0.1f)alpha = 0.0f;
+				if (alpha > 1.0f)alpha = 1.0f;
+				m_cells(r1, c1).SetVisibleColorAlpha(alpha);
+			}
+		}
+	}
 }

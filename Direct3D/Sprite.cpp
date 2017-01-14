@@ -1,7 +1,8 @@
 #include "Sprite.h"
 #include "Graphics.h"
-Sprite::Sprite(SpriteSheet* image, int imageIndex, float width, float height, Vec2f pos)
-	:m_image(image),m_imageIndex(imageIndex),m_width(width),m_height(height),m_pos(pos)
+Sprite::Sprite(SpriteSheet* image, int imageIndex, float width, float height, Vec2f pos, _EntityType type)
+	:Entity(type),
+	m_image(image),m_imageIndex(imageIndex),m_width(width),m_height(height),m_pos(pos)
 {
 	m_drawRect = { pos.x,pos.y,pos.x + m_width,pos.y + m_height };
 }

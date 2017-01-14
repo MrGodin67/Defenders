@@ -289,8 +289,8 @@ std::vector<Vec2f> AStar::findPath(Vec2i start, Vec2i end)
 			pathStack[++top] = curr_node;
 			if (curr_node)
 			{
-				float X = ((float)curr_node->s_x * cellSize);// +(cellSize * 0.5f);
-				float Y = ((float)curr_node->s_y * cellSize);// +(cellSize * 0.5f);
+				float X = ((float)curr_node->s_x * cellSize) +(cellSize * 0.5f);
+				float Y = ((float)curr_node->s_y * cellSize) +(cellSize * 0.5f);
 				Vec2f p(Y, X);
 				pathPositions.push_back(p);
 			}

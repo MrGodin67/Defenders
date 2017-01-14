@@ -147,6 +147,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AStar.cpp" />
+    <ClCompile Include="BaseManager.cpp" />
     <ClCompile Include="Bases.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ChiliKeyboard.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="Direct3D_2D.cpp" />
     <ClCompile Include="DrrectWrite.cpp" />
     <ClCompile Include="DXErr.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="ItemSelector.cpp" />
@@ -171,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AStar.h" />
+    <ClInclude Include="BaseManager.h" />
     <ClInclude Include="Bases.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ChiliException.h" />
@@ -183,7 +186,9 @@
     <ClInclude Include="DirectWrite.h" />
     <ClInclude Include="DXErr.h" />
     <ClInclude Include="EntityInterface.h" />
+    <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="InputManager.h" />

@@ -5,6 +5,7 @@
 #include "Table.h"
 #include "SpriteSheet.h"
 #include "Camera.h"
+#include <array>
 
 class WorldGrid
 {
@@ -15,6 +16,8 @@ class WorldGrid
 	std::unique_ptr<SpriteSheet> sprite;
 	Camera& m_cam;
 	AStar pathFinding;
+	std::array<int, 9> m_visibliltyArray = {-4,-3,-2,-1,0,1,2,3,4};
+	float m_visibleMaxLenSq;
 private:
 	void Create(std::vector<std::string>& map);
 public:
@@ -28,4 +31,5 @@ public:
 	Vec2i GetCellIndex(Vec2f& worldPoint);
 	void SetBasePlacementTiles(const Vec2i& mousePos);
 	bool SetBase( Vec2i pos,Tile& start_tile);
+	void SetVisibility(Vec2i pos);
 };

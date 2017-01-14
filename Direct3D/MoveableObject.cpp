@@ -4,8 +4,8 @@ bool MoveableObject::CheckWaypointArrival(const float& dt)
 {
 	if (!m_pathFinished && m_wayPointIndex != -1)
 	{
-		m_angle = Utils::GetAngleBetweenPoints(m_position, m_wayPoints[m_wayPointIndex]);
-		Vec2f pt = m_wayPoints[m_wayPointIndex] - m_position;
+		m_angle = Utils::GetAngleBetweenPoints(GetCenter(), m_wayPoints[m_wayPointIndex]);
+		Vec2f pt = m_wayPoints[m_wayPointIndex] - GetCenter();
 		if (pt.LenSq() < (m_speed * m_speed) * (dt*dt))
 		{
 			m_wayPointIndex++;
@@ -16,15 +16,15 @@ bool MoveableObject::CheckWaypointArrival(const float& dt)
 				return false;
 			}
 			
-			m_velocity = (m_wayPoints[m_wayPointIndex] - m_position).Normalize();
+			m_velocity = (m_wayPoints[m_wayPointIndex] - GetCenter()).Normalize();
 			return true;
 		}
 	}
 	return false;
 }
 
-MoveableObject::MoveableObject(SpriteSheet * image, int imageIndex, float width, float height, float& speed,Vec2f pos)
-	:Sprite(image,imageIndex,width,height,pos),
+MoveableObject::MoveableObject(SpriteSheet * image, int imageIndex, float width, float height, float& speed,Vec2f pos,_EntityType type)
+	:Sprite(image,imageIndex,width,height,pos,type),
 	m_speed(speed),
 	m_position(pos)
 {
@@ -61,10 +61,11 @@ Vec2f MoveableObject::GetCenter()
 
 void MoveableObject::SetWaypoints(std::vector<Vec2f>& wp)
 {
+	m_wayPoints.clear();
    m_wayPoints = std::move(wp);
    m_wayPointIndex = 1;
    m_pathFinished = false;
-   m_velocity = (m_wayPoints[m_wayPointIndex] - m_position).Normalize();
+   m_velocity = (m_wayPoints[m_wayPointIndex] - GetCenter()).Normalize();
 }
 
 bool MoveableObject::PathFinished()

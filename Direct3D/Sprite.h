@@ -16,7 +16,7 @@ protected:
 	int m_imageIndex;
 	float m_angle = 0.0f;
 public:
-	Sprite(SpriteSheet* image,int imageIndex, float width, float height, Vec2f pos);
+	Sprite(SpriteSheet* image,int imageIndex, float width, float height, Vec2f pos,_EntityType type);
 
 	// Inherited via Entity
 	virtual void Update(const float & dt) override;

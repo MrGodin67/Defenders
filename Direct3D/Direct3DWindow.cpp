@@ -43,7 +43,7 @@ void Direct3DWindow::Shutdown()
 }
 
 
-bool Direct3DWindow::ProcessMessage()
+_GameState Direct3DWindow::ProcessMessage()
 {
 	MSG msg;
 	bool ok;
@@ -60,11 +60,11 @@ bool Direct3DWindow::ProcessMessage()
 		DispatchMessage(&msg);
 		if (msg.message == WM_QUIT)
 		{
-			ok = false;
+			state  = _GameState::exit;
 		}
 	}
 
-	return ok;
+	return state;
 }
 
 int Direct3DWindow::ScreenWidth()
@@ -110,6 +110,20 @@ LRESULT CALLBACK Direct3DWindow::MessageHandler(HWND hwnd, UINT umsg, WPARAM wpa
 	case WM_KEYUP:
 		m_keyboard.OnKeyReleased(static_cast<unsigned char>(wparam));
 		break;
+	case WM_SYSCOMMAND:
+	{
+		WPARAM command = wparam & 0xfff0;
+		if (command == SC_MINIMIZE)
+		{
+			state = _GameState::paused;
+		}
+		break;
+	}
+	
+	case WM_ACTIVATE:
+		state = _GameState::running;
+		break;
+
 	case WM_CHAR:
 		m_keyboard.OnChar(static_cast<unsigned char>(wparam));
 		break;

@@ -2,14 +2,7 @@
 #include "Sprite.h"
 #include "SpriteSheet.h"
 #include "Locator.h"
-enum UnitTypes
-{
-	scout,
-	fighter,
-	radar,
-	drone,
-	none
-};
+
 class Base
 {
 	Sprite m_image;
@@ -17,8 +10,8 @@ class Base
 	bool m_building = false;
 	bool m_buildingComplete = false;
 	bool m_underConstruction = false;
-	UnitTypes m_unitTypes = none;
-	UnitTypes m_currentBuildType = none;
+	_EntityType m_unitTypes[4];
+	_EntityType  m_currentBuildType = none;
 	float m_build_Timer = 0.0f;
 	float m_buildTime = 0.0f;
 	float m_constuction_Timer = 0.0f;
@@ -29,4 +22,5 @@ public:
 		float constuctionTime);
 	void Update(const float& dt);
 	void Draw(class Graphics& gfx, class Camera&);
+	RectF GetAABB();
 };

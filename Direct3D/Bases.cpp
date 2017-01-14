@@ -3,7 +3,7 @@
 #include "Camera.h"
 Base::Base(SpriteSheet * image, int imageIndex, float w, float h,Vec2i pos,
 	float constuctionTime)
-	:m_image(image,imageIndex,w,h,Vec2f(pos)),
+	:m_image(image,imageIndex,w,h,Vec2f(pos),none),
 	m_underConstruction(true),
 	m_constuctionTime(constuctionTime),
 	m_width(w)
@@ -46,4 +46,9 @@ void Base::Draw(Graphics & gfx, Camera &cam)
 		gfx.DrawFilledScreenRectangle(dr.ToD2D(), D2D1::ColorF(0.0f, 1.0f, 0.0f, 1.0f));
 
 	}
+}
+
+RectF Base::GetAABB()
+{
+	return m_image.GetAABB();
 }

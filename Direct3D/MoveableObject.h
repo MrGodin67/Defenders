@@ -15,7 +15,7 @@ private:
 	bool CheckWaypointArrival(const float& dt);
 public:
 	
-	MoveableObject(SpriteSheet* image, int imageIndex, float width, float height, float& speed,Vec2f pos);
+	MoveableObject(SpriteSheet* image, int imageIndex, float width, float height, float& speed,Vec2f pos,_EntityType type);
 	virtual void Update(const float& dt)override;
 	virtual void TransformToCamera(Vec2f& pos)override;
 	virtual void SetSpeed(float& s);

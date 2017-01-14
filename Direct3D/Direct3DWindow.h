@@ -3,6 +3,7 @@
 #include "mouse.h"
 #include "Chilikeyboard.h"
 #include <WindowsX.h>
+#include "GameState.h"
 const static bool FULL_SCREEN = false;
 const static int SCREEN_WIDTH = 1024;
 const static int SCREEN_HEIGHT= 768;
@@ -19,7 +20,7 @@ public:
 
 	
 	void Shutdown();
-	bool ProcessMessage();
+	_GameState ProcessMessage();
 	int ScreenWidth();
 	int ScreenHeight();
 	
@@ -31,7 +32,7 @@ private:
 	bool Frame();
 	void InitializeWindows();
 	void ShutdownWindows();
-
+	_GameState state = _GameState::running;
 private:
 	LPCWSTR m_applicationName;
 	HINSTANCE m_hinstance;
