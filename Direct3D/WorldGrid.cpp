@@ -222,3 +222,19 @@ void WorldGrid::SetVisibility(Vec2i pos)
 		}
 	}
 }
+
+Tile * WorldGrid::GetTile(Vec2f pos)
+{
+	int row = (int)pos.y / m_cellHeight;
+	int col = (int)pos.x / m_cellWidth;
+	return &m_cells(row, col);
+}
+
+void WorldGrid::SetMapPassable(Vec2f pos, bool passable)
+{
+	int row = (int)pos.y / m_cellHeight;
+	int col = (int)pos.x / m_cellWidth;
+	int pass;
+	passable ? pass = 1 : pass = 0;
+	pathFinding.getNode(Vec2i(col, row))->s_style = pass;
+}

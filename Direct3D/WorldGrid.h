@@ -32,4 +32,6 @@ public:
 	void SetBasePlacementTiles(const Vec2i& mousePos);
 	bool SetBase( Vec2i pos,Tile& start_tile);
 	void SetVisibility(Vec2i pos);
+	Tile* GetTile(Vec2f pos);
+	void SetMapPassable(Vec2f pos,bool passable);
 };

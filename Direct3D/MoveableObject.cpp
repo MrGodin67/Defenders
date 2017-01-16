@@ -13,6 +13,7 @@ bool MoveableObject::CheckWaypointArrival(const float& dt)
 			{
 				m_pathFinished = true;
 				m_wayPointIndex = -1;
+				
 				return false;
 			}
 			
@@ -66,6 +67,11 @@ void MoveableObject::SetWaypoints(std::vector<Vec2f>& wp)
    m_wayPointIndex = 1;
    m_pathFinished = false;
    m_velocity = (m_wayPoints[m_wayPointIndex] - GetCenter()).Normalize();
+}
+
+Vec2f MoveableObject::GetPosition()
+{
+	return m_position;
 }
 
 bool MoveableObject::PathFinished()

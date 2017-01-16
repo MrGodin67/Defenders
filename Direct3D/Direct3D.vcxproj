@@ -150,7 +150,6 @@
     <ClCompile Include="BaseManager.cpp" />
     <ClCompile Include="Bases.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="ChiliKeyboard.cpp" />
     <ClCompile Include="D2D1Texture.cpp" />
     <ClCompile Include="Direct3DWindow.cpp" />
     <ClCompile Include="Direct3D_2D.cpp" />
@@ -160,9 +159,11 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="ItemSelector.cpp" />
+    <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Locator.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="MoveableObject.cpp" />
     <ClCompile Include="SimpleTimer.cpp" />
     <ClCompile Include="Sound.cpp" />
@@ -177,7 +178,6 @@
     <ClInclude Include="Bases.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ChiliException.h" />
-    <ClInclude Include="ChiliKeyboard.h" />
     <ClInclude Include="ChiliWin.h" />
     <ClInclude Include="D2D1Texture.h" />
     <ClInclude Include="Direct3DWindow.h" />

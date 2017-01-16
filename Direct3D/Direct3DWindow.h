@@ -1,9 +1,11 @@
 #pragma once
 #include <windows.h>
 #include "mouse.h"
-#include "Chilikeyboard.h"
+#include "keyboard.h"
 #include <WindowsX.h>
 #include "GameState.h"
+#include "InputManager.h"
+#include <memory>
 const static bool FULL_SCREEN = false;
 const static int SCREEN_WIDTH = 1024;
 const static int SCREEN_HEIGHT= 768;
@@ -33,17 +35,17 @@ private:
 	void InitializeWindows();
 	void ShutdownWindows();
 	_GameState state = _GameState::running;
+	
 private:
 	LPCWSTR m_applicationName;
 	HINSTANCE m_hinstance;
 	HWND m_hwnd;
 	int m_screenHeight;
 	int m_screenWidth;
-	SimpleMouseServer m_mouseServer;
-	SimpleMouse m_mouse;
 	
-	Keyboard m_keyboard;
-	
+	Mouse mouse;
+	Keyboard kbd;
+	InputManager m_input;
 };
 
 

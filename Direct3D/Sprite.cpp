@@ -42,7 +42,7 @@ Vec2f Sprite::GetCenter()
 
 Vec2f Sprite::GetPosition()
 {
-	return m_pos;
+	return Vec2f(m_drawRect.left,m_drawRect.top);
 }
 
 void Sprite::SetTexture(SpriteSheet * image, int imageIndex, float width, float height)

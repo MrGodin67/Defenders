@@ -1,6 +1,7 @@
 #pragma once
 #include "Sprite.h"
-
+#include "AStar.h"
+#include "Tile.h"
 class MoveableObject : public Sprite
 {
 protected:
@@ -21,8 +22,11 @@ public:
 	virtual void SetSpeed(float& s);
 	virtual Vec2f GetCenter() override;
 	virtual void SetWaypoints(std::vector<Vec2f>& wp);
+	virtual Vec2f GetPosition()override;
 
 public:
 	bool PathFinished();
+	Tile* p_currentTile = nullptr;
+	std::vector<Vec2f>& GetWayPoints() { return m_wayPoints; }
 
 };

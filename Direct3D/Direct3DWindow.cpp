@@ -2,29 +2,34 @@
 #include "Direct3DWindow.h"
 
 #include <windows.h>
+#include <cmath>
+#include <algorithm>
 
 Direct3DWindow::Direct3DWindow()
-	:m_mouse(m_mouseServer)
+	:
+	m_input(mouse, kbd)
 {
 	
 }
 
 Direct3DWindow::Direct3DWindow(int scrnWidth, int scrnHeight)
 	:m_screenWidth(scrnWidth),m_screenHeight(scrnHeight),
-	m_mouse(m_mouseServer)
+	m_input(mouse,kbd)
 {
 	InitializeWindows();
+	
 }
 
 
 Direct3DWindow::Direct3DWindow(const Direct3DWindow& other)
-	:m_mouse(m_mouseServer)
+	:m_input(mouse, kbd)
 {
 }
 
 
 Direct3DWindow::~Direct3DWindow()
 {
+	
 }
 
 
@@ -48,7 +53,7 @@ _GameState Direct3DWindow::ProcessMessage()
 	MSG msg;
 	bool ok;
 
-
+	
 	// Initialize the message structure.
 	ZeroMemory(&msg, sizeof(MSG));
 
@@ -63,7 +68,7 @@ _GameState Direct3DWindow::ProcessMessage()
 			state  = _GameState::exit;
 		}
 	}
-
+	
 	return state;
 }
 
@@ -99,47 +104,98 @@ bool Direct3DWindow::Frame()
 
 LRESULT CALLBACK Direct3DWindow::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
+
+
 	switch (umsg)
 	{
 	case WM_KEYDOWN:
-		if (!(lparam & 0x40000000) || m_keyboard.AutorepeatIsEnabled()) // no thank you on the autorepeat
+		if (!(lparam & 0x40000000) || kbd.AutorepeatIsEnabled()) // no thank you on the autorepeat
 		{
-			m_keyboard.OnKeyPressed(static_cast<unsigned char>(wparam));
+			kbd.OnKeyPressed(static_cast<unsigned char>(wparam));
 		}
 		break;
 	case WM_KEYUP:
-		m_keyboard.OnKeyReleased(static_cast<unsigned char>(wparam));
+		kbd.OnKeyReleased(static_cast<unsigned char>(wparam));
 		break;
-	case WM_SYSCOMMAND:
+	case WM_CHAR:
+		kbd.OnChar(static_cast<unsigned char>(wparam));
+		break;
+
+	case WM_MOUSEMOVE:
 	{
-		WPARAM command = wparam & 0xfff0;
-		if (command == SC_MINIMIZE)
+		int x = LOWORD(lparam);
+		int y = HIWORD(lparam);
+		if (x > 0 && x < SCREEN_WIDTH && y > 0 && y < SCREEN_HEIGHT)
 		{
-			state = _GameState::paused;
+			mouse.OnMouseMove(x, y);
+			if (!mouse.IsInWindow())
+			{
+				SetCapture(hwnd);
+				mouse.OnMouseEnter();
+			}
+		}
+		else
+		{
+			if (wparam & (MK_LBUTTON | MK_RBUTTON))
+			{
+				x = std::max<int>(0, x);
+				x = std::min<int>(int(SCREEN_WIDTH) - 1, x);
+				y = std::max<int>(0, y);
+				y = std::min<int>(int(SCREEN_HEIGHT) - 1, y);
+				mouse.OnMouseMove(x, y);
+			}
+			else
+			{
+				ReleaseCapture();
+				mouse.OnMouseLeave();
+				mouse.OnLeftReleased(x, y);
+				mouse.OnRightReleased(x, y);
+			}
 		}
 		break;
 	}
-	
-	case WM_ACTIVATE:
-		state = _GameState::running;
-		break;
-
-	case WM_CHAR:
-		m_keyboard.OnChar(static_cast<unsigned char>(wparam));
-		break;
-	case WM_MOUSEMOVE:
-		m_mouseServer.OnMouseMove(wparam, GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
-		break;
-	case WM_RBUTTONDOWN:
-	case WM_MBUTTONDOWN:
 	case WM_LBUTTONDOWN:
-		m_mouseServer.OnMouseDown(wparam, GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
+	{
+		int x = LOWORD(lparam);
+		int y = HIWORD(lparam);
+		mouse.OnLeftPressed(x, y);
 		break;
-	case WM_RBUTTONUP:
-	case WM_MBUTTONUP:
+	}
+	case WM_RBUTTONDOWN:
+	{
+		int x = LOWORD(lparam);
+		int y = HIWORD(lparam);
+		mouse.OnRightPressed(x, y);
+		break;
+	}
 	case WM_LBUTTONUP:
-		m_mouseServer.OnMouseUp(wparam, GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
+	{
+		int x = LOWORD(lparam);
+		int y = HIWORD(lparam);
+		mouse.OnLeftReleased(x, y);
 		break;
+	}
+	case WM_RBUTTONUP:
+	{
+		int x = LOWORD(lparam);
+		int y = HIWORD(lparam);
+		mouse.OnRightReleased(x, y);
+		break;
+	}
+	case WM_MOUSEWHEEL:
+	{
+		int x = LOWORD(lparam);
+		int y = HIWORD(lparam);
+		if (GET_WHEEL_DELTA_WPARAM(wparam) > 0)
+		{
+			mouse.OnWheelUp(x, y);
+		}
+		else if (GET_WHEEL_DELTA_WPARAM(wparam) < 0)
+		{
+			mouse.OnWheelDown(x, y);
+		}
+		break;
+	}
 	
 	}
 	return DefWindowProc(hwnd, umsg, wparam, lparam);

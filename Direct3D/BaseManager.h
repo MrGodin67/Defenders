@@ -2,6 +2,7 @@
 #include "Bases.h"
 #include "includes.h"
 #include "SpriteSheet.h"
+
 class BaseManager
 {
 	std::unique_ptr<SpriteSheet> m_images;

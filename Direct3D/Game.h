@@ -13,14 +13,16 @@
 #include "BaseManager.h"
 #include "GameState.h"
 #include "EntityManager.h"
+
 class Game
 {
 	class Direct3DWindow& window;
 	Graphics gfx;
-	InputManager m_input;
+	
 	void EndApp();
 	Camera m_cam;
 	WorldGrid m_grid;
+	InputManager& m_input;
 	ItemsSelector::Item selected_Base = ItemsSelector::Item();
 	std::unique_ptr<BaseManager> m_baseManager;
 	std::unique_ptr<SoundManager> m_soundFX;
@@ -30,6 +32,7 @@ class Game
 	std::unique_ptr<SpriteSheet> m_gameBases;
 	std::unique_ptr<ItemsSelector> m_itemSelector;
 	std::unique_ptr<UnitManager> m_unitManager;
+	
 	
 	//std::unordered_map<std::string, SoundEffect> m_soundFX;
 	_GameState m_gameState = _GameState::start;

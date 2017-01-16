@@ -35,7 +35,7 @@ RectF Tile::GetRect()
 
 Vec2f Tile::GetWorldPosition()
 {
-	return m_image.GetPosition();
+	return Vec2f(m_image.GetAABB().left + 2.0f, m_image.GetAABB().top + 2.0f);
 }
 
 void Tile::SetVisibleColorAlpha(float alpha)

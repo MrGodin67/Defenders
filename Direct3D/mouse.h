@@ -1,112 +1,129 @@
+/****************************************************************************************** 
+ *	Chili DirectX Framework Version 16.07.20											  *	
+ *	Mouse.h																				  *
+ *	Copyright 2016 PlanetChili <http://www.planetchili.net>								  *
+ *																						  *
+ *	This file is part of The Chili DirectX Framework.									  *
+ *																						  *
+ *	The Chili DirectX Framework is free software: you can redistribute it and/or modify	  *
+ *	it under the terms of the GNU General Public License as published by				  *
+ *	the Free Software Foundation, either version 3 of the License, or					  *
+ *	(at your option) any later version.													  *
+ *																						  *
+ *	The Chili DirectX Framework is distributed in the hope that it will be useful,		  *
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of						  *
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the						  *
+ *	GNU General Public License for more details.										  *
+ *																						  *
+ *	You should have received a copy of the GNU General Public License					  *
+ *	along with The Chili DirectX Framework.  If not, see <http://www.gnu.org/licenses/>.  *
+ ******************************************************************************************/
 #pragma once
+#include <queue>
 
-#include <windows.h>
-#include "Vec2.h"
-
-class alignas(16) SimpleMouseServer
+class Mouse
 {
-	friend class SimpleMouse;
-protected:
-	int m_X;
-	int m_Y;
-	bool m_leftBtnDown = false;
-	bool m_rightBtnDown = false;
-	bool m_middleBtnDown = false;
-
+	friend class Direct3DWindow;
 public:
-	SimpleMouseServer() {}
+	class Event
+	{
+	public:
+		enum Type
+		{
+			LPress,
+			LRelease,
+			RPress,
+			RRelease,
+			WheelUp,
+			WheelDown,
+			Move,
+			Invalid
+		};
+	private:
+		Type type;
+		bool leftIsPressed;
+		bool rightIsPressed;
+		int x;
+		int y;
+	public:
+		Event()
+			:
+			type( Invalid ),
+			leftIsPressed( false ),
+			rightIsPressed( false ),
+			x( 0 ),
+			y( 0 )
+		{}
+		Event( Type type,const Mouse& parent )
+			:
+			type( type ),
+			leftIsPressed( parent.leftIsPressed ),
+			rightIsPressed( parent.rightIsPressed ),
+			x( parent.x ),
+			y( parent.y )
+		{}
+		bool IsValid() const
+		{
+			return type != Invalid;
+		}
+		Type GetType() const
+		{
+			return type;
+		}
+		std::pair<int,int> GetPos() const
+		{
+			return{ x,y };
+		}
+		int GetPosX() const
+		{
+			return x;
+		}
+		int GetPosY() const
+		{
+			return y;
+		}
+		bool LeftIsPressed() const
+		{
+			return leftIsPressed;
+		}
+		bool RightIsPressed() const
+		{
+			return rightIsPressed;
+		}
+	};
 public:
-	
-	bool OnMouseMove(WPARAM state, int x, int y)
+	Mouse() = default;
+	Mouse( const Mouse& ) = delete;
+	Mouse& operator=( const Mouse& ) = delete;
+	std::pair<int,int> GetPos() const;
+	int GetPosX() const;
+	int GetPosY() const;
+	bool LeftIsPressed() const;
+	bool RightIsPressed() const;
+	bool IsInWindow() const;
+	Mouse::Event Read();
+	bool IsEmpty() const
 	{
-		
-		m_X = x;
-		m_Y = y;
-		
-		return true;
+		return buffer.empty();
 	}
-	bool OnMouseDown(WPARAM state, int x, int y)
-	{
-		
-		if ((state & MK_LBUTTON) != 0)
-		{
-			m_leftBtnDown = true;
-		}
-		if ((state & MK_RBUTTON) != 0)
-		{
-			m_rightBtnDown = true;
-		}
-		if ((state & MK_MBUTTON) != 0)
-		{
-			m_middleBtnDown = true;
-		}
-		
-		return true;
-	}
-	bool OnMouseUp(WPARAM state, int x, int y)
-	{
-		
-		if ((state & MK_LBUTTON) == 0)
-		{
-			m_leftBtnDown = false;
-		}
-		if ((state & MK_RBUTTON) == 0)
-		{
-			m_rightBtnDown = false;
-		}
-		if ((state & MK_MBUTTON) == 0)
-		{
-			m_middleBtnDown = false;
-		}
-		return true;
-	}
-	
-};
-
-class alignas(16) SimpleMouse
-{
-	SimpleMouseServer& server;
-	bool m_LBD = false;
-	bool m_MBD = false;
-	bool m_RBD = false;
-public:
-	SimpleMouse(SimpleMouseServer& sm)
-		:
-		server(sm)
-	{
-		
-	}
-	
-	bool LeftBtnClick()
-	{
-		if (!m_LBD && server.m_leftBtnDown)
-		{
-			return (m_LBD = true);
-		}
-		m_LBD = server.m_leftBtnDown;
-		return false;
-	}
-	bool RightBtnClick()
-	{
-		if (!m_RBD && server.m_rightBtnDown)
-		{
-			return (m_RBD = true);
-		}
-		m_RBD = server.m_rightBtnDown;
-		return false;
-	}
-	bool MiddleBtnClick()
-	{
-		if (!m_MBD && server.m_middleBtnDown)
-		{
-			return (m_MBD = true);
-		}
-		m_MBD = server.m_middleBtnDown;
-		return false;
-	}
-	bool LeftBtnDown() { return server.m_leftBtnDown; }
-	bool RightBtnDown() { return server.m_rightBtnDown; }
-	bool MiddleBtnDown() { return server.m_middleBtnDown; }
-	
-	Vec2i MousePos() { return Vec2i(server.m_X, server.m_Y); }
+	void Flush();
+private:
+	void OnMouseMove( int x,int y );
+	void OnMouseLeave();
+	void OnMouseEnter();
+	void OnLeftPressed( int x,int y );
+	void OnLeftReleased( int x,int y );
+	void OnRightPressed( int x,int y );
+	void OnRightReleased( int x,int y );
+	void OnWheelUp( int x,int y );
+	void OnWheelDown( int x,int y );
+	void TrimBuffer();
+private:
+	static constexpr unsigned int bufferSize = 4u;
+	int x;
+	int y;
+	bool leftIsPressed = false;
+	bool rightIsPressed = false;
+	bool isInWindow = false;
+	std::queue<Event> buffer;
 };

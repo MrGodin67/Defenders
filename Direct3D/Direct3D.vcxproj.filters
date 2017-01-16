@@ -87,9 +87,6 @@
     <ClCompile Include="SimpleTimer.cpp">
       <Filter>Objects\Timer</Filter>
     </ClCompile>
-    <ClCompile Include="ChiliKeyboard.cpp">
-      <Filter>Objects\Input</Filter>
-    </ClCompile>
     <ClCompile Include="WorldGrid.cpp">
       <Filter>Objects\World</Filter>
     </ClCompile>
@@ -138,6 +135,12 @@
     <ClCompile Include="EntityManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>Objects\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Keyboard.cpp">
+      <Filter>Objects\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Direct3DWindow.h">
@@ -169,9 +172,6 @@
     </ClInclude>
     <ClInclude Include="SimpleTimer.h">
       <Filter>Objects\Timer</Filter>
-    </ClInclude>
-    <ClInclude Include="ChiliKeyboard.h">
-      <Filter>Objects\Input</Filter>
     </ClInclude>
     <ClInclude Include="Table.h">
       <Filter>Header Files</Filter>

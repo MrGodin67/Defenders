@@ -7,11 +7,11 @@
 Game::Game(Direct3DWindow & wnd)
 	:
 	window(wnd),
-	m_input(window.m_mouse,window.m_keyboard),
 	gfx(wnd.ScreenWidth(),wnd.ScreenHeight(),wnd.WindowHandle(),
 		true, FULL_SCREEN,1000.0f,0.01f),
 	m_cam((float)wnd.ScreenWidth(), (float)wnd.ScreenHeight() - 128),
-	m_grid(m_cam)
+	m_grid(m_cam),
+	m_input(wnd.m_input)
 {
 	LoadSounds();
 	LoadImages();
@@ -35,13 +35,16 @@ bool Game::Play(const float& deltaTime)
 
 HRESULT Game::ConstructScene(const float& deltaTime)
 {
-	Vec2i mousePt = m_input.GetMousePos();
+	
+	Mouse::Event e_mouse = m_input.GetMouseEvent();
+	Keyboard::Event e_kbd = m_input.GetKeyboardEvent();
+	Vec2i mousePt = { e_mouse.GetPosX(),e_mouse.GetPosY() };
 	switch (m_gameState)
 	{
 	case _GameState::running:
 	{
 		
-
+		
 		if (m_input.KeyPress(VK_ESCAPE))
 			m_gameState = _GameState::paused;
 
@@ -67,18 +70,8 @@ HRESULT Game::ConstructScene(const float& deltaTime)
 			scroll.y = 10.0f;
 		}
 		m_cam.Scroll(scroll);
-		if (m_input.MouseMiddleClick())
-		{
-			float d = 0.0f;
-			
-		}
 		
-		m_unitManager->Update(deltaTime);
-			
-		
-	
-
-		if (m_input.MouseLeftClick())
+		if (e_mouse.GetType() == Mouse::Event::LPress)
 		{
 			if (m_input.KeyPress(VK_SHIFT))
 			{
@@ -87,7 +80,7 @@ HRESULT Game::ConstructScene(const float& deltaTime)
 			if (m_itemSelector->BaseItemSelected() && selected_Base.selected)
 			{
 					Tile tile;
-					if (m_grid.SetBase(Vec2i(m_input.GetMousePos()+m_cam.GetPos()), tile))
+					if (m_grid.SetBase(Vec2i(mousePt+m_cam.GetPos()), tile))
 					{
 						m_baseManager->AddBase(tile.GetWorldPosition(), selected_Base.imageIndex);
 				    	m_itemSelector->BaseItemSelected(false);
@@ -96,7 +89,7 @@ HRESULT Game::ConstructScene(const float& deltaTime)
 				
 			}
 			
-			if (m_itemSelector->OnMouseClick(m_input.GetMousePos(), selected_Base))
+			if (m_itemSelector->OnMouseClick(mousePt, selected_Base))
 			{
 				selected_Base.selected = true;
 			}
@@ -106,9 +99,9 @@ HRESULT Game::ConstructScene(const float& deltaTime)
 			}
      	}
 		if(m_itemSelector->BaseItemSelected())
-			m_grid.SetBasePlacementTiles(m_input.GetMousePos());
+			m_grid.SetBasePlacementTiles(mousePt);
 
-		
+		m_unitManager->Update(deltaTime, e_mouse,e_kbd);
 		m_baseManager->Update(deltaTime);
 	}
 		break;
@@ -116,10 +109,10 @@ HRESULT Game::ConstructScene(const float& deltaTime)
 	case _GameState::start:
 		
 			
-		if (m_input.MouseLeftClick())
+		if (e_mouse.GetType() == Mouse::Event::LPress)
 		{
 			
-			int result = m_MainMenu->OnMouseClick(m_input.GetMousePos().x, m_input.GetMousePos().y);
+			int result = m_MainMenu->OnMouseClick(mousePt.x, mousePt.y);
 			if (result != -1)
 			{
 				switch (result)
