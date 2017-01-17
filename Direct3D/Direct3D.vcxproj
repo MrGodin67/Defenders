@@ -169,6 +169,7 @@
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
+    <ClCompile Include="StartMenu.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="WorldGrid.cpp" />
   </ItemGroup>
@@ -196,6 +197,7 @@
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="Locator.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="MenuBase.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="MoveableObject.h" />
     <ClInclude Include="Rect.h" />
@@ -205,6 +207,7 @@
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteSheet.h" />
+    <ClInclude Include="StartMenu.h" />
     <ClInclude Include="Table.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Utils.h" />

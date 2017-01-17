@@ -34,12 +34,7 @@ Vec2f Camera::GetPos() { return pos; }
 void Camera::ConfineToMap(RectF& map_frame) { mapFrame = map_frame; };
 Vec2f Camera:: ConvertToWorldSpace(Vec2f in_pos)
 {
-	Vec2f pt(in_pos + this->pos);
-	if (PointInViewFrame(pt, { 0.0f,0.0f }))
-	{
-		return pt;
-	}
-	return Vec2f(-1.0f, -1.0f);
+	return Vec2f (in_pos + this->pos);
 }
 bool Camera::PointInViewFrame(Vec2f pt, const Vec2f& offset)
 {

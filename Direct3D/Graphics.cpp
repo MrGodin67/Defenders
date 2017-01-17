@@ -11,6 +11,7 @@ Graphics::Graphics(int screenWidth,int screenHeight,HWND & hwnd,
 	hr = CreateTextObjects();
 	assert(hr == S_OK);
 	Locator::SetD2DRenderTarget(m_pD2DRenderTarget);
+	Locator::SetTextManager(&m_TextFactory);
 }
 
 HRESULT Graphics::BeginScene(float red, float green, float blue, float alpha)

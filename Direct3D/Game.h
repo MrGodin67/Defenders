@@ -7,6 +7,7 @@
 #include "MoveableObject.h"
 #include "SpriteSheet.h"
 #include "MainMenu.h"
+#include "StartMenu.h"
 #include "SoundEffect.h"
 #include "ItemSelector.h"
 #include "SoundManager.h"
@@ -16,6 +17,7 @@
 
 class Game
 {
+	Vec2i m_mousePt = Vec2i(0, 0);
 	class Direct3DWindow& window;
 	Graphics gfx;
 	
@@ -34,12 +36,13 @@ class Game
 	std::unique_ptr<UnitManager> m_unitManager;
 	
 	
-	//std::unordered_map<std::string, SoundEffect> m_soundFX;
-	_GameState m_gameState = _GameState::start;
+	std::unordered_map<std::string, std::unique_ptr<MenuInterface>> m_menus;
+	_GameState m_gameState = _GameState::paused;
 private:
 	void LoadSounds();
 	void Move();
 	void LoadUnits();
+	void HandleUserEvents(Mouse::Event mouse, Keyboard::Event kbd);
 public:
 	Game(class Direct3DWindow& wnd);
 	bool Play(const float& deltaTime);

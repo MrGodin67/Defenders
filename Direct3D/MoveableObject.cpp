@@ -1,10 +1,25 @@
 #include "MoveableObject.h"
 #include "Utils.h"
+#include "WorldGrid.h"
 bool MoveableObject::CheckWaypointArrival(const float& dt)
 {
-	if (!m_pathFinished && m_wayPointIndex != -1)
+
+	if (!m_pathFinished )
 	{
-		m_angle = Utils::GetAngleBetweenPoints(GetCenter(), m_wayPoints[m_wayPointIndex]);
+		Tile* tileO = m_grid.GetTile(GetCenter());
+		Tile* tile2 = m_grid.GetTile(m_wayPoints[m_wayPointIndex]);
+		if (p_currentTile != tileO)
+		{
+			if (tile2 == tileO)
+			{
+				m_grid.SetMapPassable(p_currentTile->GetWorldPosition(), true);
+				p_currentTile = tile2;
+			
+				m_grid.SetMapPassable(p_currentTile->GetWorldPosition(), false);
+
+			}
+		}
+		
 		Vec2f pt = m_wayPoints[m_wayPointIndex] - GetCenter();
 		if (pt.LenSq() < (m_speed * m_speed) * (dt*dt))
 		{
@@ -12,11 +27,11 @@ bool MoveableObject::CheckWaypointArrival(const float& dt)
 			if (m_wayPointIndex >= (int)m_wayPoints.size())
 			{
 				m_pathFinished = true;
-				m_wayPointIndex = -1;
-				
 				return false;
 			}
 			
+
+			m_angle = Utils::GetAngleBetweenPoints(GetCenter(), m_wayPoints[m_wayPointIndex]);
 			m_velocity = (m_wayPoints[m_wayPointIndex] - GetCenter()).Normalize();
 			return true;
 		}
@@ -24,12 +39,17 @@ bool MoveableObject::CheckWaypointArrival(const float& dt)
 	return false;
 }
 
-MoveableObject::MoveableObject(SpriteSheet * image, int imageIndex, float width, float height, float& speed,Vec2f pos,_EntityType type)
+MoveableObject::MoveableObject(WorldGrid& grid,SpriteSheet * image, int imageIndex, float width, float height, float& speed,Vec2f pos,_EntityType type)
 	:Sprite(image,imageIndex,width,height,pos,type),
 	m_speed(speed),
-	m_position(pos)
+	m_position(pos),
+	m_grid(grid)
 {
 	m_angle = 90.0f;
+	m_wayPoints.push_back(m_position);
+	m_wayPointIndex = 1;
+	p_currentTile = m_grid.GetTile(m_position);
+	m_grid.SetMapPassable(m_position, false);
 }
 
 void MoveableObject::Update(const float & dt)
@@ -38,7 +58,11 @@ void MoveableObject::Update(const float & dt)
 	
 	CheckWaypointArrival(dt);
 	if (m_pathFinished)
-		m_velocity = Vec2f(0.0f,0.0f);
+	{
+		m_velocity = Vec2f(0.0f, 0.0f);
+		m_grid.SetMapPassable(GetCenter(), false);
+
+	}
 }
 
 void MoveableObject::TransformToCamera(Vec2f & pos)
@@ -72,6 +96,21 @@ void MoveableObject::SetWaypoints(std::vector<Vec2f>& wp)
 Vec2f MoveableObject::GetPosition()
 {
 	return m_position;
+}
+
+void MoveableObject::SetWayPoints(Vec2i mouse)
+{
+	std::vector<Vec2f> pts;
+	if (m_grid.FindPath(Vec2i(m_position), mouse, pts))
+	{
+		m_wayPoints.clear();
+		m_wayPoints = std::move(pts);
+		m_wayPointIndex = 1;
+		m_pathFinished = false;
+		m_angle = Utils::GetAngleBetweenPoints(GetCenter(), m_wayPoints[m_wayPointIndex]);
+		m_velocity = (m_wayPoints[m_wayPointIndex] - GetCenter()).Normalize();
+
+	};
 }
 
 bool MoveableObject::PathFinished()

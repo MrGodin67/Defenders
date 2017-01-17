@@ -3,8 +3,11 @@
 #include "Locator.h"
 #include "Rect.h"
 #include "Graphics.h"
+#include <algorithm>
+#include <cmath>
 void UnitManager::HandleInput(Entity * obj)
 {
+	
 }
 void UnitManager::HandleInput( Mouse::Event& mouse, Keyboard::Event& kbd)
 {
@@ -36,34 +39,10 @@ void UnitManager::HandleInput( Mouse::Event& mouse, Keyboard::Event& kbd)
 	{
 		if (m_selectedMoveableEntity)
 		{
-			if (!m_selectedMoveableEntity->PathFinished())
-			{
-				if (m_selectedMoveableEntity->GetWayPoints().size() > 0)
-				{
-					Tile* tile = m_grid.GetTile(m_selectedMoveableEntity->GetWayPoints().back());
-					m_grid.SetMapPassable(tile->GetWorldPosition(), true);
-
-					tile->Passable(true);
-				}
-				
-			}
-
-			std::vector<Vec2f> pts;
 			Vec2f mp = Vec2f((float)mouse.GetPosX(), (float)mouse.GetPosY());
 			mp = m_cam.ConvertToWorldSpace(mp);
-			Vec2i s = m_grid.GetCellIndex(m_selectedMoveableEntity->GetCenter());
-			Vec2i e = m_grid.GetCellIndex(mp);
-
-			if (m_grid.FindPath(s, e, pts))
-			{
-				// set last tile in list to impassable
-				// so can't select there with another obj
-				Tile* tile = m_grid.GetTile(pts.back());
-				tile->Passable(false);
-				
-
-				m_selectedMoveableEntity->SetWaypoints(pts);
-			}
+			m_selectedMoveableEntity->SetWayPoints(mp);
+		
 		}
 	}
 }
@@ -82,20 +61,20 @@ void UnitManager::AddPlayerUnit(_EntityType type, Vec2i pos)
 	switch (type)
 	{
 	case drone:
-		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_images.get(), 0, 48.0f, 48.0f, speeds[3], Vec2f(pos.x*64.0f, pos.y* 64.0f), drone));
+		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid,m_images.get(), 0, 48.0f, 48.0f, speeds[3], Vec2f(pos.x*64.0f, pos.y* 64.0f), drone));
 		
 		break;
 	case fighter:
-		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_images.get(), 1, 48.0f, 48.0f, speeds[2], Vec2f(pos.x*64.0f, pos.y* 64.0f), fighter));
+		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid, m_images.get(), 1, 48.0f, 48.0f, speeds[2], Vec2f(pos.x*64.0f, pos.y* 64.0f), fighter));
 		break;
 	case artillary:
-		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_images.get(), 2, 48.0f, 48.0f, speeds[1], Vec2f(pos.x*64.0f, pos.y* 64.0f), artillary));
+		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid, m_images.get(), 2, 48.0f, 48.0f, speeds[1], Vec2f(pos.x*64.0f, pos.y* 64.0f), artillary));
 		break;
 	case radar:
-		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_images.get(), 3, 48.0f, 48.0f, speeds[0], Vec2f(pos.x*64.0f, pos.y* 64.0f), radar));
+		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid, m_images.get(), 3, 48.0f, 48.0f, speeds[0], Vec2f(pos.x*64.0f, pos.y* 64.0f), radar));
 		break;
 	case miner:
-		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_images.get(), 4, 48.0f, 48.0f, speeds[0], Vec2f(pos.x*64.0f, pos.y* 64.0f), miner));
+		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid, m_images.get(), 4, 48.0f, 48.0f, speeds[0], Vec2f(pos.x*64.0f, pos.y* 64.0f), miner));
 		break;
 	}
 }
@@ -136,36 +115,13 @@ void UnitManager::Update(const float & dt, Mouse::Event& mouse, Keyboard::Event&
 		case drone:
 		{
 			MoveableObject* obj = (MoveableObject*)m_playerEntites[index].get();
-			if (obj)
-			{
-				
-				Tile* tile = m_grid.GetTile(obj->GetCenter());
-				
-					// if a new tile
-					if (obj->p_currentTile != tile)
-					{
-						// set old tile to passable
-						if (obj->p_currentTile)
-							m_grid.SetMapPassable(obj->p_currentTile->GetWorldPosition(), true);
-						// new tile to impassable
-						if (tile->Passable())
-						{
-							m_grid.SetMapPassable(tile->GetWorldPosition(), false);
-							// set obj's new tile
-							obj->p_currentTile = tile;
-						}
-				}
-				obj->Update(dt);
-				obj->TransformToCamera(m_cam.GetPos());
-				if (!obj->PathFinished())
-					m_grid.SetVisibility(obj->GetCenter());
-				else
-				{
-					m_grid.SetMapPassable(obj->GetCenter(), true);
-					
-				}
+			
+			obj->Update(dt);
+			obj->TransformToCamera(m_cam.GetPos());
+			m_grid.SetVisibility(obj->GetCenter());
+			
 
-			}
+		  
 		}
 		break;
 		}

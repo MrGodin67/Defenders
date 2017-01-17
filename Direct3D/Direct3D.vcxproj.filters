@@ -64,6 +64,9 @@
     <Filter Include="Managers">
       <UniqueIdentifier>{eddeab4b-50db-4912-8eec-87e57fc649eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Objects\UI\StartGame">
+      <UniqueIdentifier>{c9ff51c4-581e-4134-91e7-f15e219b53b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -140,6 +143,9 @@
     </ClCompile>
     <ClCompile Include="Keyboard.cpp">
       <Filter>Objects\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="StartMenu.cpp">
+      <Filter>Objects\UI\StartGame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -256,6 +262,12 @@
     </ClInclude>
     <ClInclude Include="EntityManager.h">
       <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="StartMenu.h">
+      <Filter>Objects\UI\StartGame</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBase.h">
+      <Filter>Objects\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

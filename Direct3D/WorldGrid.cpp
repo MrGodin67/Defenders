@@ -137,6 +137,10 @@ void WorldGrid::Draw(Graphics & gfx, RectF& viewport)
 bool WorldGrid::FindPath(Vec2i& startPt,Vec2i& endPt,std::vector<Vec2f>& newPath)
 {
 	pathFinding.Reset();
+	startPt.x /= m_cellWidth;
+	startPt.y /= m_cellHeight;
+	endPt.x /= m_cellWidth;
+	endPt.y /= m_cellHeight;
 	if (m_cells(endPt.y, endPt.x).Passable())
 		newPath = pathFinding.findPath(startPt, endPt);
 	else
@@ -235,6 +239,7 @@ void WorldGrid::SetMapPassable(Vec2f pos, bool passable)
 	int row = (int)pos.y / m_cellHeight;
 	int col = (int)pos.x / m_cellWidth;
 	int pass;
+	m_cells(row, col).Passable(passable);
 	passable ? pass = 1 : pass = 0;
 	pathFinding.getNode(Vec2i(col, row))->s_style = pass;
 }

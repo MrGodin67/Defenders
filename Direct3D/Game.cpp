@@ -20,6 +20,9 @@ Game::Game(Direct3DWindow & wnd)
 	m_cam.ConfineToMap(RectF(0.0f, 0.0f, m_grid.Width(), m_grid.Height()));
 	m_MainMenu = std::make_unique<MainMenu>(Vec2f((float)window.ScreenWidth() / 2, (float)window.ScreenHeight() / 2), 800.0f, 600.0f);
 	
+	m_menus["main"] = std::make_unique<MainMenu>(Vec2f((float)window.ScreenWidth() / 2, (float)window.ScreenHeight() / 2), 800.0f, 600.0f);
+	m_menus["start"] = std::make_unique<StartMenu>(Vec2f((float)window.ScreenWidth() / 2, (float)window.ScreenHeight() / 2), 800.0f, 600.0f);
+
 	
 
 }
@@ -38,88 +41,64 @@ HRESULT Game::ConstructScene(const float& deltaTime)
 	
 	Mouse::Event e_mouse = m_input.GetMouseEvent();
 	Keyboard::Event e_kbd = m_input.GetKeyboardEvent();
-	Vec2i mousePt = { e_mouse.GetPosX(),e_mouse.GetPosY() };
+	if(e_mouse.IsValid())
+	   m_mousePt = Vec2i(e_mouse.GetPosX(), e_mouse.GetPosY());
+	
 	switch (m_gameState)
 	{
 	case _GameState::running:
-	{
-		
-		
-		if (m_input.KeyPress(VK_ESCAPE))
-			m_gameState = _GameState::paused;
-
-		Vec2f scroll(0.0f, 0.0f);
-		
-		
-
-		if (m_input.KeyPress('A'))
-		{
-			scroll.x = -10.0f;
-		}
-		if (m_input.KeyPress('D'))
-		{
-			scroll.x = 10.0f;
-
-		}
-		if (m_input.KeyPress('W'))
-		{
-			scroll.y = -10.0f;
-		}
-		if (m_input.KeyPress('S'))
-		{
-			scroll.y = 10.0f;
-		}
-		m_cam.Scroll(scroll);
-		
-		if (e_mouse.GetType() == Mouse::Event::LPress)
-		{
-			if (m_input.KeyPress(VK_SHIFT))
-			{
-				m_baseManager->OnMouseClick(mousePt);
-			}
-			if (m_itemSelector->BaseItemSelected() && selected_Base.selected)
-			{
-					Tile tile;
-					if (m_grid.SetBase(Vec2i(mousePt+m_cam.GetPos()), tile))
-					{
-						m_baseManager->AddBase(tile.GetWorldPosition(), selected_Base.imageIndex);
-				    	m_itemSelector->BaseItemSelected(false);
-					}
-					
-				
-			}
-			
-			if (m_itemSelector->OnMouseClick(mousePt, selected_Base))
-			{
-				selected_Base.selected = true;
-			}
-			else
-			{
-				selected_Base.selected = false;
-			}
-     	}
+	{		
+		HandleUserEvents(e_mouse, e_kbd);
 		if(m_itemSelector->BaseItemSelected())
-			m_grid.SetBasePlacementTiles(mousePt);
+			m_grid.SetBasePlacementTiles(m_mousePt);
 
 		m_unitManager->Update(deltaTime, e_mouse,e_kbd);
 		m_baseManager->Update(deltaTime);
 	}
 		break;
 	case _GameState::paused:
-	case _GameState::start:
-		
-			
+		m_menus["main"]->OnMouseOver(m_mousePt);
 		if (e_mouse.GetType() == Mouse::Event::LPress)
 		{
-			
-			int result = m_MainMenu->OnMouseClick(mousePt.x, mousePt.y);
+
+			int result = m_menus["main"]->OnMouseClick(Vec2i(m_mousePt));
 			if (result != -1)
 			{
 				switch (result)
 				{
 				case 0:
+					m_gameState = _GameState::start;
+				break;
 				case 1:
 					m_gameState = _GameState::running;
+					m_menus["main"]->GameStarted(true);
+					break;
+				case 2:
+					EndApp();
+					break;
+
+				}
+			}
+
+		}
+		break;
+	case _GameState::start:
+		
+		m_menus["start"]->OnMouseOver(m_mousePt);
+		if (e_mouse.GetType() == Mouse::Event::LPress)
+		{
+			
+			int result = m_menus["start"]->OnMouseClick(Vec2i(m_mousePt));
+			if (result != -1)
+			{
+				switch (result)
+				{
+				case 0:
+					m_gameState = _GameState::running;
+					m_menus["main"]->GameStarted(true);
+					break;
+				case 1:
+					m_gameState = _GameState::paused;
 					break;
 				case 2:
 					EndApp();
@@ -151,8 +130,10 @@ HRESULT Game::RenderScene()
 		
 		break;
 	case _GameState::paused:
+		m_menus["main"]->Draw(gfx);
+		break;
 	case _GameState::start:
-		m_MainMenu->Draw(gfx);
+		m_menus["start"]->Draw(gfx);
 		break;
 	}
 	hr = gfx.EndScene();
@@ -200,6 +181,8 @@ void Game::LoadSounds()
 	m_soundFX->AddSound("constructioncomplete", L"media\\constuctionCompleted.wav");
 	m_soundFX->AddSound("unitrepaired", L"media\\unitrepaired.wav");
 	m_soundFX->AddSound("newunitsavailable", L"media\\newunit.wav");
+	m_soundFX->AddSound("tick", L"media\\tick.wav");
+	m_soundFX->AddSound("select", L"media\\select.wav");
 	Locator::SetSoundManager(m_soundFX.get());
 
 }
@@ -228,5 +211,60 @@ void Game::LoadUnits()
 		}
 	}
 	
+	
+}
+
+void Game::HandleUserEvents(Mouse::Event mouse, Keyboard::Event kbd)
+{
+	if (m_input.AnyKeyPressed())
+	{
+		Vec2f scroll(0.0f, 0.0f);
+		if(m_input.KeyPress('A'))
+			scroll.x = -10.0f;
+		if(m_input.KeyPress('D'))
+			scroll.x = 10.0f;
+		if(m_input.KeyPress('W'))
+			scroll.y = -10.0f;
+		if(m_input.KeyPress('S'))
+			scroll.y = 10.0f ;
+
+		if (m_input.KeyPress(VK_ESCAPE))
+		{
+			Locator::SoundEngine->Play("select", 0.5f);
+			m_gameState = _GameState::paused;
+		}
+
+		
+		m_cam.Scroll(scroll);
+	}
+	
+	
+	if (mouse.GetType() == Mouse::Event::LPress)
+	{
+		if (m_input.KeyPress(VK_SHIFT))
+		{
+			m_baseManager->OnMouseClick(m_mousePt);
+		}
+		if (m_itemSelector->BaseItemSelected() && selected_Base.selected)
+		{
+			Tile tile;
+			if (m_grid.SetBase(Vec2i(m_mousePt + m_cam.GetPos()), tile))
+			{
+				m_baseManager->AddBase(tile.GetWorldPosition(), selected_Base.imageIndex);
+				m_itemSelector->BaseItemSelected(false);
+			}
+
+
+		}
+
+		if (m_itemSelector->OnMouseClick(m_mousePt, selected_Base))
+		{
+			selected_Base.selected = true;
+		}
+		else
+		{
+			selected_Base.selected = false;
+		}
+	}
 	
 }
