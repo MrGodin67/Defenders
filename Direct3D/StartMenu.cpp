@@ -76,6 +76,8 @@ StartMenu::StartMenu(Vec2f screenCenter, float width, float height)
 	assert(m_textures.back());
 	m_textures.push_back(std::make_unique<D2D1Texture>(Locator::RenderTarget, L"media\\bases.png"));
 	assert(m_textures.back());
+	m_textures.push_back(std::make_unique<D2D1Texture>(Locator::RenderTarget, L"media\\worldMap.png"));
+	assert(m_textures.back());
 }
 
 
@@ -164,11 +166,13 @@ int StartMenu::OnMouseOver(Vec2i & mouse)
 
 void StartMenu::DrawMap(Graphics & gfx)
 {
-	RectF frm = { 440.0f,160.0f,860.0f,500.0f };
+	
+	RectF frm = { 430.0f,160.0f,845.0f,600.0f };
 	D2D1_COLOR_F colour = D2D1::ColorF(0.0f, 1.0f, 0.0f, 1.25f);
+	gfx.DrawSprite(D2D1::Matrix3x2F::Identity(), frm.ToD2D(), m_textures[3]->GetBitmap());
 
 	Locator::TextManager->GetFormat("Tahoma22")->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
-	gfx.RenderText(L"(1) Outpost D-11, Initial invasion\n(2) Outpost D-32, beat them back\n(3) Outpost E-37, take the offensive", Locator::TextManager->GetFormat("Tahoma22"), frm.ToD2D(), colour);
+	//gfx.RenderText(L"(1) Outpost D-11, Initial invasion\n(2) Outpost D-32, beat them back\n(3) Outpost E-37, take the offensive", Locator::TextManager->GetFormat("Tahoma22"), frm.ToD2D(), colour);
 	
 }
 
