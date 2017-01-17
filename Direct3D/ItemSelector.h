@@ -4,11 +4,13 @@
 #include "SpriteSheet.h"
 #include "Sprite.h"
 #include "Table.h"
+#include "Bases.h"
 
 class ItemsSelector
 {
 	
 public:
+	
 	struct Item
 	{
 	
@@ -32,7 +34,10 @@ public:
 
 	};
 public:
-	ItemsSelector() {}
+	ItemsSelector() 
+	{
+	}
+	~ItemsSelector() {}
 	ItemsSelector(Vec2f& screenSize,float height);
 	void  SetSprites(std::string name, SpriteSheet* image);
 	void Draw(class Graphics& gfx);
@@ -41,10 +46,12 @@ public:
 	void BaseItemSelected(bool val);
 private:
 	SpriteSheet* spriteSheet;
+	std::unique_ptr<D2D1Texture> hud_display;
+	
 	RectF border;
 	bool PointIn(const int& x, const int& y);
 	bool baseItemSelected = false;
-	Table<Item> m_bases;
+	Table<Base> m_bases;
 	Table<Item> m_items;
 	std::unordered_map<std::string, SpriteSheet*> m_images;
 };

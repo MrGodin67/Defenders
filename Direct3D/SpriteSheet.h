@@ -1,7 +1,7 @@
 #pragma once
 #include "includes.h"
 #include "D2D1Texture.h"
-#include "Locator.h"
+
 #include "Rect.h"
 class SpriteSheet
 {

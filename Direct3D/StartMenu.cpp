@@ -1,6 +1,6 @@
 #include "StartMenu.h"
 #include "Graphics.h"
-
+#include "Locator.h"
 
 StartMenu::StartMenu(Vec2f screenCenter, float width, float height)
 {
@@ -9,75 +9,85 @@ StartMenu::StartMenu(Vec2f screenCenter, float width, float height)
 		screenCenter.x + (width * 0.5f),
 		screenCenter.y + (height * 0.5f));
 	std::vector<WCHAR*> text;
-	float p2x = 0.0f;
-	float p2y = 0.0f;
-	float px = 440.0f;
-	float py = 160.0f;
+	
+	float px = border.left + 328.0f;
+	float py = border.top + 80.0f;
 	float inc1 = 90.0f;
 	text.push_back(L"Drone : fast scouting\nLimited offensive, collect tech");
 	text.push_back(L"Fighter : main battle uint\nBest offensive");
 	text.push_back(L"Artillary : slow moving\nIncreased range");
 	text.push_back(L"Radar : slow moving\nNo offence, Enemy detection");
-	for (int c = 0; c < 4; c++)
+	text.push_back(L"Turret : static\n Enemy detection");
+	
+	for (int c = 0; c < 5; c++)
 	{
+		UnitRects[c].clip = Locator::ImageManager->GetClip("player_units", c);
 		UnitRects[c].pos = { px,py,px + 64.0f,py + 64.0f };
-		
+		UnitRects[c].textPos = { px + 70.0f,py + 6.0f,px + 364.0f,py + 64.0f };
 		py += inc1;
-		UnitRects[c].clip = { p2x,p2y,p2x + 64.0f,p2y + 64.0f };
-		p2x += 64.0f;
 		UnitRects[c].text = text[c];
 	}
-	py = 160.0f;
+	
+	py = border.top + 80.0f;
 	inc1 = 106.0f;
 	text.clear();
-	text.push_back(L"Command Post : Deploy drones.");
+	text.push_back(L"Command Post : Drone creation, sell technology ");
 	text.push_back(L"Factory : Build Fighters\nRadar, Artillary.");
-	text.push_back(L"Technology : Build new Tech from scavanged\ntech.");
+	text.push_back(L"Technology : Build new Tech from scavanged technology.");
 	text.push_back(L"Repair Facility : Repair units.");
 	
 	for (int c = 0; c < 4; c++)
 	{
 		BaseRects[c].pos = { px,py,px + 96.0f,py + 96.0f };
-
+		BaseRects[c].clip = Locator::ImageManager->GetClip("bases", c);
+		BaseRects[c].textPos = { px + 100.0f,py + 6.0f,px + 396.0f,py + 96.0f };
 		py += inc1;
-		
 		BaseRects[c].text = text[c];
 	}
-	BaseRects[0].clip = { 0.0f,0.0f,128.0f,128.0f };
-	BaseRects[1].clip = { 128.0f,0.0f,256.0f,128.0f };
-	BaseRects[2].clip = { 0.0f,128.0f,128.0f,256.0f };
-	BaseRects[3].clip = { 128.0f,128.0f,256.0f,256.0f };
-	p2x += 64.0f;
+	
+	
 	float w = 160.0f;
 	float h = 32.0f;
 	float x = border.left + 80.0f;
 	float y = border.top + 80.0f;
 	float inc = 34.0f;
 	text.clear();
-	text.push_back(L"Maps");
+	text.push_back(L"Map");
 	text.push_back(L"Units");
 	text.push_back(L"Bases");
+	text.push_back(L"Technology");
+	text.push_back(L"Objective");
 	text.push_back(L"Exit");
-	text.push_back(L"Dummy");
-	text.push_back(L"Dummy");
-	for (int c = 0; c < numButtons; c++)
+	for (int c = 0; c < numButtons -1; c++)
 	{
 		Buttons[c].frame = RectF(x, y, x + w, y + h);
-		Buttons[c].id = c;
+		Buttons[c].id = 0;
 		Buttons[c].text = text[c];
 		y += inc;
 		
 	}
-
+	y += inc * 6;
+	Buttons[numButtons - 1].frame = RectF(x, y, x + w, y + h);
+	Buttons[numButtons - 1].id = 1;
+	Buttons[numButtons - 1].text = L"Back";
 	
-	m_textures.push_back(std::make_unique<D2D1Texture>(Locator::RenderTarget, L"media\\menuBack2.png"));
-	assert(m_textures.back());
-	m_textures.push_back(std::make_unique<D2D1Texture>(Locator::RenderTarget, L"media\\playerunits.png"));
-	assert(m_textures.back());
-	m_textures.push_back(std::make_unique<D2D1Texture>(Locator::RenderTarget, L"media\\bases.png"));
-	assert(m_textures.back());
-	m_textures.push_back(std::make_unique<D2D1Texture>(Locator::RenderTarget, L"media\\worldMap.png"));
-	assert(m_textures.back());
+	TechRects[0].clip = Locator::ImageManager->GetClip("player_units", 5);
+	TechRects[0].pos = UnitRects[3].pos;
+	TechRects[0].textPos = UnitRects[3].textPos;
+	TechRects[0].text = L"Techology hardware";
+
+	TechRects[1].clip = Locator::ImageManager->GetClip("player_units", 6);
+	TechRects[1].pos = UnitRects[4].pos;
+	TechRects[1].textPos = UnitRects[4].textPos;
+	TechRects[1].text = L"Data storage device";
+
+	TechRects[2].textPos =  { border.left + 328.0f,border.top + 80.0f,border.right - 80.0f,border.bottom - 80.0f };
+	TechRects[2].text = L"  Collect as much enemy technology as you can. Constuct it by combining scripts,found on data storage units, along with hardware found amongst the enemy wreckage. You can then sell it to enterprises that can further enhance it's capabilities, or you may choose to use the technology to upgrade your units. Rest assured, everything has it's price..";
+	
+	
+
+
+
 }
 
 
@@ -87,7 +97,7 @@ StartMenu::~StartMenu()
 
 void StartMenu::Draw(Graphics & gfx)
 {
-	gfx.DrawSprite(D2D1::Matrix3x2F::Identity(), border.ToD2D(), m_textures[0]->GetBitmap());
+	gfx.DrawSprite(D2D1::Matrix3x2F::Identity(), border.ToD2D(), Locator::ImageManager->GetImage("menuBack2")->GetTexture());
 	gfx.DrawRectangle(D2D1::Matrix3x2F::Identity(), border.ToD2D(), D2D1::ColorF(1.0f, 1.0f, 1.0f, 1.0f));
 	gfx.DrawFilledScreenRectangle(border.ToD2D(), D2D1::ColorF(0.2f, 0.2f, 0.9f, 0.20f));
 	D2D1_COLOR_F colour = D2D1::ColorF(0.0f, 1.0f, 0.0f, 1.25f);
@@ -111,6 +121,13 @@ void StartMenu::Draw(Graphics & gfx)
 				break;
 			case 2:
 				DrawBases(gfx);
+				break;
+			case 3:
+				DrawTechnology(gfx);
+				break;	
+			case 4:
+				DrawObjectives(gfx);
+				break;
 			}
 		}
 		else
@@ -133,7 +150,8 @@ int StartMenu::OnMouseClick(Vec2i& mouse)
 
 		if (Buttons[c].frame.Contains(mouse))
 		{
-			Locator::SoundEngine->Play("select", 1.25f);
+			Locator::SoundEngine->Play("select", 0.75f);
+			
 			return Buttons[c].id;
 		}
 
@@ -167,25 +185,23 @@ int StartMenu::OnMouseOver(Vec2i & mouse)
 void StartMenu::DrawMap(Graphics & gfx)
 {
 	
-	RectF frm = { 430.0f,160.0f,845.0f,600.0f };
-	D2D1_COLOR_F colour = D2D1::ColorF(0.0f, 1.0f, 0.0f, 1.25f);
-	gfx.DrawSprite(D2D1::Matrix3x2F::Identity(), frm.ToD2D(), m_textures[3]->GetBitmap());
+	RectF frm = { border.left + 328.0f,border.top + 80.0f,border.right - 80.0f,border.bottom  -  80.0f };
 
-	Locator::TextManager->GetFormat("Tahoma22")->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
-	//gfx.RenderText(L"(1) Outpost D-11, Initial invasion\n(2) Outpost D-32, beat them back\n(3) Outpost E-37, take the offensive", Locator::TextManager->GetFormat("Tahoma22"), frm.ToD2D(), colour);
+	D2D1_COLOR_F colour = D2D1::ColorF(0.0f, 1.0f, 0.0f, 1.25f);
+	gfx.DrawSprite(D2D1::Matrix3x2F::Identity(), frm.ToD2D(), Locator::ImageManager->GetImage("worldmap")->GetTexture());
+
 	
 }
 
 void StartMenu::DrawUnits(Graphics & gfx)
 {
-	RectF frm = { 440.0f,160.0f,860.0f,500.0f };
+	
 	D2D1_COLOR_F colour = D2D1::ColorF(0.0f, 1.0f, 0.0f, 1.25f);
 	Locator::TextManager->GetFormat("Tahoma22")->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
-	for (int c = 0; c < 4; c++)
+	for (int c = 0; c < 5; c++)
 	{
-		frm = UnitRects[c].pos; frm.left += 70.0f; frm.right += 290.0f;
-		gfx.DrawSprite(D2D1::Matrix3x2F::Identity(), UnitRects[c].pos.ToD2D(), m_textures[1]->GetBitmap(), &UnitRects[c].clip.ToD2D());
-		gfx.RenderText(UnitRects[c].text, Locator::TextManager->GetFormat("Tahoma22"), frm.ToD2D(), colour);
+		gfx.DrawSprite(D2D1::Matrix3x2F::Identity(), UnitRects[c].pos.ToD2D(), UnitRects[c].clip.bitmap, &UnitRects[c].clip.rect.ToD2D());
+		gfx.RenderText(UnitRects[c].text, Locator::TextManager->GetFormat("Tahoma22"), UnitRects[c].textPos.ToD2D(), colour);
 
 		int y = 0;
 	}
@@ -193,15 +209,40 @@ void StartMenu::DrawUnits(Graphics & gfx)
 
 void StartMenu::DrawBases(Graphics & gfx)
 {
-	RectF frm = { 440.0f,160.0f,860.0f,500.0f };
+	
 	D2D1_COLOR_F colour = D2D1::ColorF(0.0f, 1.0f, 0.0f, 1.25f);
 	Locator::TextManager->GetFormat("Tahoma22")->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 	for (int c = 0; c < 4; c++)
 	{
-		frm = BaseRects[c].pos; frm.left += 110.0f; frm.right += 330.0f; frm.top += 32.0f; frm.bottom += 32.0f;
-		gfx.DrawSprite(D2D1::Matrix3x2F::Identity(), BaseRects[c].pos.ToD2D(), m_textures[2]->GetBitmap(), &BaseRects[c].clip.ToD2D());
-		gfx.RenderText(BaseRects[c].text, Locator::TextManager->GetFormat("Tahoma22"), frm.ToD2D(), colour);
+		gfx.DrawSprite(D2D1::Matrix3x2F::Identity(), BaseRects[c].pos.ToD2D(), BaseRects[c].clip.bitmap, &BaseRects[c].clip.rect.ToD2D());
+		gfx.RenderText(BaseRects[c].text, Locator::TextManager->GetFormat("Tahoma22"), BaseRects[c].textPos.ToD2D(), colour);
 
 	
 	}
+}
+
+void StartMenu::DrawObjectives(Graphics & gfx)
+{
+	RectF frm = { border.left + 328.0f,border.top + 80.0f,border.right - 80.0f,border.bottom - 80.0f };
+	WCHAR* txt = L"  An unidentified entity has landed on Outpost H-16 in the Delta Quadrant. In order for us to defeat the incursion we must eraticate the intruders.\n You will be provided the resposability to defend the location";
+	D2D1_COLOR_F color = D2D1::ColorF(0.0f, 1.0f, 0.0f, 1.0f);
+	Locator::TextManager->GetFormat("Tahoma20")->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+	gfx.RenderText(txt, Locator::TextManager->GetFormat("Tahoma20"), frm.ToD2D(), color);
+
+}
+
+void StartMenu::DrawTechnology(Graphics & gfx)
+{
+	D2D1_COLOR_F color = D2D1::ColorF(0.0f, 1.0f, 0.0f, 1.0f);
+	Locator::TextManager->GetFormat("Tahoma20")->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+	gfx.RenderText(TechRects[2].text, Locator::TextManager->GetFormat("Tahoma20"), TechRects[2].textPos.ToD2D(), color);
+	
+	for (int c = 0; c < 2; c++)
+	{
+		gfx.DrawSprite(D2D1::Matrix3x2F::Identity(), TechRects[c].pos.ToD2D(), TechRects[c].clip.bitmap, &TechRects[c].clip.rect.ToD2D());
+		gfx.RenderText(TechRects[c].text, Locator::TextManager->GetFormat("Tahoma22"), TechRects[c].textPos.ToD2D(), color);
+
+	}
+	
+
 }

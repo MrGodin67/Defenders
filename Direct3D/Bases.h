@@ -18,6 +18,7 @@ class Base
 	float m_constuctionTime = 0.0f;
 	float m_width;
 public:
+	Base() :m_image(0, 0, 0, 0, Vec2f(0,0), none) {}
 	Base(SpriteSheet* image, int imageIndex, float w, float h,Vec2i pos,
 		float constuctionTime);
 	void Update(const float& dt);

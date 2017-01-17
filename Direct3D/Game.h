@@ -14,6 +14,8 @@
 #include "BaseManager.h"
 #include "GameState.h"
 #include "EntityManager.h"
+#include "FileWriter.h"
+#include "TextureManager.h"
 
 class Game
 {
@@ -34,7 +36,9 @@ class Game
 	std::unique_ptr<SpriteSheet> m_gameBases;
 	std::unique_ptr<ItemsSelector> m_itemSelector;
 	std::unique_ptr<UnitManager> m_unitManager;
+	std::unique_ptr<TextureManager> m_textureManager;
 	
+	FileHandler testFile;
 	
 	std::unordered_map<std::string, std::unique_ptr<MenuInterface>> m_menus;
 	_GameState m_gameState = _GameState::paused;

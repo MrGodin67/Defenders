@@ -170,6 +170,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="StartMenu.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="WorldGrid.cpp" />
   </ItemGroup>
@@ -188,6 +189,7 @@
     <ClInclude Include="DXErr.h" />
     <ClInclude Include="EntityInterface.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="FileWriter.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Graphics.h" />
@@ -209,6 +211,7 @@
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="StartMenu.h" />
     <ClInclude Include="Table.h" />
+    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Vec2.h" />

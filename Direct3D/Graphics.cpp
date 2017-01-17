@@ -132,6 +132,10 @@ HRESULT Graphics::CreateTextObjects()
 	if (!result) { return E_FAIL; }
 	result = m_TextFactory.InitializeFont("Tahoma22", { L"Tahoma", 22.0f });
 	if (!result) { return E_FAIL; }
+	result = m_TextFactory.InitializeFont("Tahoma20", { L"Tahoma", 20.0f });
+	if (!result) { return E_FAIL; }
+	result = m_TextFactory.InitializeFont("Tahoma18", { L"Tahoma", 18.0f });
+	if (!result) { return E_FAIL; }
 	result = m_TextFactory.InitializeFont("Tahoma12", { L"Tahoma", 12.0f });
 	if (!result) { return E_FAIL; }
 	result = m_TextFactory.InitializeFont("Tahoma10", { L"Tahoma", 10.0f });

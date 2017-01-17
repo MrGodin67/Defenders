@@ -3,23 +3,26 @@
 #include "Rect.h"
 #include "Vec2.h"
 #include "D2D1Texture.h"
-#include "Locator.h"
+#include "TextureManager.h"
 #include "menuBase.h"
 class StartMenu : public MenuInterface
 {
 	struct DrawRects
 	{
+		TextureManager::ImageClip clip;
 		RectF pos;
-		RectF clip;
+		RectF textPos;
 		WCHAR* text;
 	};
+
 	Button Buttons[6];
 	int numButtons = 6;
-	DrawRects UnitRects[4];
+	DrawRects UnitRects[5];
 	DrawRects BaseRects[4];
+	DrawRects TechRects[3];
 	RectF border;
 	int lastOver = -1;
-	std::vector<std::unique_ptr<D2D1Texture>> m_textures;
+
 	
 public:
 	StartMenu(Vec2f screenCenter, float width, float height);
@@ -31,4 +34,6 @@ public:
 	void DrawMap(class Graphics& gfx);
 	void DrawUnits(class Graphics& gfx);
 	void DrawBases(class Graphics& gfx);
+	void DrawObjectives(class Graphics& gfx);
+	void DrawTechnology(class Graphics& gfx);
 };

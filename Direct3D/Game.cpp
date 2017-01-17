@@ -23,7 +23,8 @@ Game::Game(Direct3DWindow & wnd)
 	m_menus["main"] = std::make_unique<MainMenu>(Vec2f((float)window.ScreenWidth() / 2, (float)window.ScreenHeight() / 2), 800.0f, 600.0f);
 	m_menus["start"] = std::make_unique<StartMenu>(Vec2f((float)window.ScreenWidth() / 2, (float)window.ScreenHeight() / 2), 800.0f, 600.0f);
 
-	
+	testFile.WriteFile();
+	testFile.ReadFile();
 
 }
 
@@ -160,6 +161,19 @@ bool Game::LoadImages()
 	m_gamePieces = std::make_unique<SpriteSheet>(L"media\\test.png", 32.0f, 32.0f);
 	m_itemSelector = std::make_unique<ItemsSelector>(Vec2f((float)window.ScreenWidth(), (float)window.ScreenHeight()), 128.0f);
 	m_itemSelector->SetSprites("base", m_baseManager->Images());
+	
+	m_textureManager = std::make_unique<TextureManager>();
+	std::vector<TextureManager::ImageData> data;
+	data.emplace_back("bases", L"media\\bases.png", 128.0f, 128.0f);
+	data.emplace_back("map", L"media\\map_pieces.png", 64.0f, 64.0f);
+	data.emplace_back("player_units", L"media\\playerunits.png", 64.0f, 64.0f);
+	data.emplace_back("menuBack1", L"media\\menuback.png", 800.0f, 600.0f);
+	data.emplace_back("menuBack2", L"media\\menuback2.png", 800.0f, 600.0f);
+	data.emplace_back("hud", L"media\\hud.png", 256.0f, 128.0f);
+	data.emplace_back("worldmap", L"media\\worldMap.png", 512.0f, 512.0f);
+	m_textureManager->LoadImages(data);
+	
+	Locator::SetImageManager(m_textureManager.get());
 	return true;
 }
 void Game::EndApp()

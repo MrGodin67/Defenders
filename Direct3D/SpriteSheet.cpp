@@ -1,5 +1,5 @@
 #include "SpriteSheet.h"
-
+#include "Locator.h"
 SpriteSheet::SpriteSheet(std::wstring filename, float clipWidth, float clipHeight)
 	:clipWidth(clipWidth),clipHeight(clipHeight)
 {
