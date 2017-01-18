@@ -274,9 +274,8 @@ void Game::HandleUserEvents(Mouse::Event mouse, Keyboard::Event kbd)
 			}
 
 
-		}
-
-		m_itemSelector->OnMouseClick(m_mousePt, m_input.KeyPress(VK_CONTROL));
+		}else
+			m_itemSelector->OnMouseClick(m_mousePt, m_input.KeyPress(VK_CONTROL));
 		
 	}
 	

@@ -128,7 +128,7 @@ void WorldGrid::Draw(Graphics & gfx, RectF& viewport,Base* selectedBase )
 	if (m_basePlacementTiles.size() <= 0)
 		return;
 	D2D1_COLOR_F color;
-	m_basePlacementTiles.size() == 4 ? color = { 0.0f,1.0f,0.0f,0.25f } : color = { 1.0f,0.0f,0.0f,0.25f };
+	
 	if (selectedBase)
 	{
 		RectF rect = m_basePlacementTiles[0]->GetRect();
@@ -141,6 +141,7 @@ void WorldGrid::Draw(Graphics & gfx, RectF& viewport,Base* selectedBase )
 	}
 	for (int d = 0; d < m_basePlacementTiles.size(); d++)
 	{
+		m_basePlacementTiles[d]->Passable() ? color = { 0.0f,1.0f,0.0f,0.25f } : color = { 1.0f,0.0f,0.0f,0.25f };
 		gfx.DrawFilledScreenRectangle(m_basePlacementTiles[d]->GetRect().ToD2D(), color);
 	}
 	
@@ -184,11 +185,10 @@ void WorldGrid::SetBasePlacementTiles(const Vec2i & mousePos)
 		{
 			for (int c = col; c < col + 2; c++)
 			{
-				if (m_cells(r, c).Passable())
-				{
+				
 					m_basePlacementTiles.push_back(&m_cells(r, c));
 					
-				}
+				
 			}
 		}
 	}
@@ -201,8 +201,12 @@ void WorldGrid::FlushPlacementTiles()
 
 bool WorldGrid::SetBase(Vec2i pos, Tile& start_tile)
 {
-	if (m_basePlacementTiles.size() != 4)
+	if (!m_basePlacementTiles[0]->Passable() || 
+		!m_basePlacementTiles[1]->Passable() || 
+		!m_basePlacementTiles[2]->Passable() || 
+		!m_basePlacementTiles[3]->Passable() )
 		return false;
+
 	int row = pos.y / m_cellHeight;
 	int col = pos.x / m_cellWidth;
 	start_tile = m_cells(row, col);
