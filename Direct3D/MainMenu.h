@@ -12,7 +12,7 @@ class MainMenu : public MenuInterface
 	int lastOver = -1;
 	int numButtons = 3;
 	RectF border;
-	std::unique_ptr<D2D1Texture> texture;
+
 public:
 	MainMenu(Vec2f screenCenter,float width,float height);
 	~MainMenu();

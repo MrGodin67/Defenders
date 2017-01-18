@@ -8,9 +8,9 @@
 |            TTTT   T    SSSSWWWWWWWS                          |
 |            T      TTTTT   SSSSSSSSS                          |
 |  TTTTT     T    TTT         TTTT                             |
-|  T   T   RTT     T        TTTTTTTTTT                         |
+|  T   T           T        TTTTTTTTTT                         |
 |  T   TTTTR     T T          TTTTT  T          WW             |
-|TTTTW     R     TTTTT          RRR         WWWWWWW            |
+|  TTW     R     TTTTT          RRR         WWWWWWW            |
 |    W     W   TTT  TT       RRRRRR            WWW             |
 |    WWW WWW         T                                         |
 |              TT    T                                         |

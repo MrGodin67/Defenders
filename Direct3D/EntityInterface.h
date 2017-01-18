@@ -9,7 +9,9 @@ enum _EntityType
 	fighter,
 	artillary,
 	radar,
-	miner,
+	turret,
+	tech,
+	data,
 	none
 };
 class Entity

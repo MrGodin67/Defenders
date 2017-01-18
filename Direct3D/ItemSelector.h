@@ -39,19 +39,19 @@ public:
 	}
 	~ItemsSelector() {}
 	ItemsSelector(Vec2f& screenSize,float height);
-	void  SetSprites(std::string name, SpriteSheet* image);
 	void Draw(class Graphics& gfx);
-	bool OnMouseClick(const Vec2i& mouse, Item& item);
+	bool OnMouseClick(const Vec2i& mouse,bool isControlKey);
 	bool BaseItemSelected();
 	void BaseItemSelected(bool val);
-private:
-	SpriteSheet* spriteSheet;
-	std::unique_ptr<D2D1Texture> hud_display;
+	Base* CurrentSelectedBase();
 	
+private:
 	RectF border;
 	bool PointIn(const int& x, const int& y);
+	void DrawItems(class Graphics& gfx);
 	bool baseItemSelected = false;
 	Table<Base> m_bases;
+	Base* m_selectedBase = nullptr;
 	Table<Item> m_items;
-	std::unordered_map<std::string, SpriteSheet*> m_images;
+	
 };

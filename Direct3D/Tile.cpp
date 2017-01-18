@@ -25,7 +25,7 @@ void Tile::draw(Graphics & gfx,Camera& cam)
 	m_visibleRect = m_image.GetAABB();
 	m_image.Draw(gfx);
 	D2D1_COLOR_F color = D2D1::ColorF(0.08f, 0.08f, 0.08f, m_colorAlphaBlend);
-	gfx.DrawFilledScreenRectangle(m_visibleRect.ToD2D(), color);
+	//gfx.DrawFilledScreenRectangle(m_visibleRect.ToD2D(), color);
 }
 
 RectF Tile::GetRect()

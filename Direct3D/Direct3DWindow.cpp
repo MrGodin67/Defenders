@@ -124,7 +124,7 @@ LRESULT CALLBACK Direct3DWindow::MessageHandler(HWND hwnd, UINT umsg, WPARAM wpa
 	case WM_MOUSEMOVE:
 	{
 		POINTS pt = MAKEPOINTS(lparam);
-		if (pt.x > 0 && pt.x < SCREEN_WIDTH && pt.y > 0 && pt.y < SCREEN_HEIGHT)
+		if (pt.x > 0 && pt.x < m_screenWidth && pt.y > 0 && pt.y < m_screenHeight)
 		{
 			mouse.OnMouseMove(pt.x, pt.y);
 			if (!mouse.IsInWindow())
@@ -138,9 +138,9 @@ LRESULT CALLBACK Direct3DWindow::MessageHandler(HWND hwnd, UINT umsg, WPARAM wpa
 			if (wparam & (MK_LBUTTON | MK_RBUTTON))
 			{
 				pt.x = std::max<short>(short(0), pt.x);
-				pt.x = std::min<short>(short(SCREEN_WIDTH - 1), pt.x);
+				pt.x = std::min<short>(short(m_screenWidth - 1), pt.x);
 				pt.y = std::max<short>(short(0), pt.y);
-				pt.y = std::min<short>(short(SCREEN_HEIGHT - 1), pt.y);
+				pt.y = std::min<short>(short(m_screenHeight - 1), pt.y);
 				mouse.OnMouseMove(pt.x, pt.y);
 			}
 			else

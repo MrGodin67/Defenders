@@ -105,7 +105,7 @@ void WorldGrid::LoadMap(const std::string& mapfile, const std::wstring& textureF
 	Create(mapText);
 }
 
-void WorldGrid::Draw(Graphics & gfx, RectF& viewport)
+void WorldGrid::Draw(Graphics & gfx, RectF& viewport,Base* selectedBase )
 {
 	int startX = (int)viewport.left / m_cellWidth;
 	int startY = (int)viewport.top / m_cellHeight;
@@ -125,12 +125,25 @@ void WorldGrid::Draw(Graphics & gfx, RectF& viewport)
 
 		}
 	}
+	if (m_basePlacementTiles.size() <= 0)
+		return;
 	D2D1_COLOR_F color;
 	m_basePlacementTiles.size() == 4 ? color = { 0.0f,1.0f,0.0f,0.25f } : color = { 1.0f,0.0f,0.0f,0.25f };
+	if (selectedBase)
+	{
+		RectF rect = m_basePlacementTiles[0]->GetRect();
+		rect.right = rect.left + 128.0f;
+		rect.bottom = rect.top + 128.0f;
+		gfx.DrawSprite(D2D1::Matrix3x2F::Identity(),
+			rect.ToD2D(),
+			Locator::ImageManager->GetImage("bases")->GetTexture(),
+			&Locator::ImageManager->GetImage("bases")->GetClippedImage(selectedBase->ImageIndex()).ToD2D());
+	}
 	for (int d = 0; d < m_basePlacementTiles.size(); d++)
 	{
 		gfx.DrawFilledScreenRectangle(m_basePlacementTiles[d]->GetRect().ToD2D(), color);
 	}
+	
 
 }
 
@@ -181,6 +194,11 @@ void WorldGrid::SetBasePlacementTiles(const Vec2i & mousePos)
 	}
 }
 
+void WorldGrid::FlushPlacementTiles()
+{
+	m_basePlacementTiles.clear();
+}
+
 bool WorldGrid::SetBase(Vec2i pos, Tile& start_tile)
 {
 	if (m_basePlacementTiles.size() != 4)
@@ -209,12 +227,12 @@ void WorldGrid::SetVisibility(Vec2i pos)
 	{
 		r1 = row + m_visibliltyArray[r];
 		if (r1 < 0)r1 = 0;
-		if (r1 > m_rows)r1 = m_rows;
+		if (r1 >= m_rows)r1 = m_rows -1;
 		for (int c = 0; c < m_visibliltyArray.size(); c++)
 		{
 			c1 = col + m_visibliltyArray[c];
 			if (c1 < 0)c1 = 0;
-			if (c1 > m_columns)c1 = m_columns;
+			if (c1 >= m_columns)c1 = m_columns -1;
 			if (m_cells(r1, c1).GetVisibleColorAplha() != 0.0f)
 			{
 				float lenSq = (m_cells(r1, c1).GetWorldPosition() - pos).LenSq();

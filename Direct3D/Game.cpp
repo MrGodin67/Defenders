@@ -9,7 +9,7 @@ Game::Game(Direct3DWindow & wnd)
 	window(wnd),
 	gfx(wnd.ScreenWidth(),wnd.ScreenHeight(),wnd.WindowHandle(),
 		true, FULL_SCREEN,1000.0f,0.01f),
-	m_cam((float)wnd.ScreenWidth(), (float)wnd.ScreenHeight() - 128),
+	m_cam((float)wnd.ScreenWidth(), (float)wnd.ScreenHeight()),
 	m_grid(m_cam),
 	m_input(wnd.m_input)
 {
@@ -122,7 +122,7 @@ HRESULT Game::RenderScene()
 	switch (m_gameState)
 	{
 	case _GameState::running:
-		m_grid.Draw(gfx, m_cam.GetViewFrame());
+		m_grid.Draw(gfx, m_cam.GetViewFrame(),m_itemSelector->CurrentSelectedBase());
 		m_baseManager->Draw(gfx,m_cam);
 		m_unitManager->Draw(gfx);
 		// draw last
@@ -156,12 +156,6 @@ bool Game::LoadMap(const int & index,const std::wstring textureFilename)
 
 bool Game::LoadImages()
 {
-	m_baseManager = std::make_unique<BaseManager>(L"media\\bases.png",128.0f,128.0f);
-	m_gameMapPieces = std::make_unique<SpriteSheet>(L"media\\map_pieces.png", 64.0f, 64.0f);
-	m_gamePieces = std::make_unique<SpriteSheet>(L"media\\test.png", 32.0f, 32.0f);
-	m_itemSelector = std::make_unique<ItemsSelector>(Vec2f((float)window.ScreenWidth(), (float)window.ScreenHeight()), 128.0f);
-	m_itemSelector->SetSprites("base", m_baseManager->Images());
-	
 	m_textureManager = std::make_unique<TextureManager>();
 	std::vector<TextureManager::ImageData> data;
 	data.emplace_back("bases", L"media\\bases.png", 128.0f, 128.0f);
@@ -172,8 +166,14 @@ bool Game::LoadImages()
 	data.emplace_back("hud", L"media\\hud.png", 256.0f, 128.0f);
 	data.emplace_back("worldmap", L"media\\worldMap.png", 512.0f, 512.0f);
 	m_textureManager->LoadImages(data);
-	
+
 	Locator::SetImageManager(m_textureManager.get());
+	m_baseManager = std::make_unique<BaseManager>();
+	m_gameMapPieces = std::make_unique<SpriteSheet>(L"media\\map_pieces.png", 64.0f, 64.0f);
+	m_gamePieces = std::make_unique<SpriteSheet>(L"media\\test.png", 32.0f, 32.0f);
+	m_itemSelector = std::make_unique<ItemsSelector>(Vec2f((float)window.ScreenWidth(), (float)window.ScreenHeight()), 128.0f);
+	
+	
 	return true;
 }
 void Game::EndApp()
@@ -252,33 +252,32 @@ void Game::HandleUserEvents(Mouse::Event mouse, Keyboard::Event kbd)
 		m_cam.Scroll(scroll);
 	}
 	
-	
+	if (mouse.GetType() == Mouse::Event::RPress)
+	{
+		m_itemSelector->BaseItemSelected(false);
+		m_grid.FlushPlacementTiles();
+	}
 	if (mouse.GetType() == Mouse::Event::LPress)
 	{
 		if (m_input.KeyPress(VK_SHIFT))
 		{
 			m_baseManager->OnMouseClick(m_mousePt);
 		}
-		if (m_itemSelector->BaseItemSelected() && selected_Base.selected)
+		if (m_itemSelector->BaseItemSelected())
 		{
 			Tile tile;
-			if (m_grid.SetBase(Vec2i(m_mousePt + m_cam.GetPos()), tile))
+			if (m_grid.SetBase(Vec2i(m_cam.ConvertToWorldSpace(m_mousePt)), tile))
 			{
-				m_baseManager->AddBase(tile.GetWorldPosition(), selected_Base.imageIndex);
+				m_baseManager->AddBase(Vec2i(m_cam.ConvertToWorldSpace(tile.GetWorldPosition())), m_itemSelector->CurrentSelectedBase()->ImageIndex());
 				m_itemSelector->BaseItemSelected(false);
+				m_soundFX->Play("constructionstarted");
 			}
 
 
 		}
 
-		if (m_itemSelector->OnMouseClick(m_mousePt, selected_Base))
-		{
-			selected_Base.selected = true;
-		}
-		else
-		{
-			selected_Base.selected = false;
-		}
+		m_itemSelector->OnMouseClick(m_mousePt, m_input.KeyPress(VK_CONTROL));
+		
 	}
 	
 }

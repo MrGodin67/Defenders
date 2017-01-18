@@ -148,7 +148,7 @@
       <Filter>Objects\UI\StartGame</Filter>
     </ClCompile>
     <ClCompile Include="TextureManager.cpp">
-      <Filter>Objects\Texture</Filter>
+      <Filter>Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -169,9 +169,6 @@
     </ClInclude>
     <ClInclude Include="DirectWrite.h">
       <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>Objects\Input</Filter>
     </ClInclude>
     <ClInclude Include="keyboard.h">
       <Filter>Objects\Input</Filter>
@@ -276,7 +273,10 @@
       <Filter>Objects</Filter>
     </ClInclude>
     <ClInclude Include="TextureManager.h">
-      <Filter>Objects\Texture</Filter>
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

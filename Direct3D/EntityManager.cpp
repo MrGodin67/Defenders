@@ -23,7 +23,7 @@ void UnitManager::HandleInput( Mouse::Event& mouse, Keyboard::Event& kbd)
 				{
 				case radar:
 				case fighter:
-				case miner:
+				case turret:
 				case artillary:
 				case drone:
 					m_selectedMoveableEntity = (MoveableObject*)m_playerEntites[index].get();
@@ -73,8 +73,8 @@ void UnitManager::AddPlayerUnit(_EntityType type, Vec2i pos)
 	case radar:
 		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid, m_images.get(), 3, 48.0f, 48.0f, speeds[0], Vec2f(pos.x*64.0f, pos.y* 64.0f), radar));
 		break;
-	case miner:
-		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid, m_images.get(), 4, 48.0f, 48.0f, speeds[0], Vec2f(pos.x*64.0f, pos.y* 64.0f), miner));
+	case turret:
+		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid, m_images.get(), 4, 48.0f, 48.0f, speeds[0], Vec2f(pos.x*64.0f, pos.y* 64.0f), turret));
 		break;
 	}
 }
@@ -91,7 +91,7 @@ void UnitManager::AddEnemyUnit(_EntityType type, Vec2i pos)
 		break;
 	case radar:
 		break;
-	case miner:
+	case turret:
 		break;
 	}
 }
@@ -110,7 +110,7 @@ void UnitManager::Update(const float & dt, Mouse::Event& mouse, Keyboard::Event&
 		{
 		case radar:
 		case fighter:
-		case miner:
+		case turret:
 		case artillary:
 		case drone:
 		{

@@ -27,8 +27,7 @@ MainMenu::MainMenu(Vec2f screenCenter, float width, float height)
 		y += inc;
 
 	}
-	texture = std::make_unique<D2D1Texture>(Locator::RenderTarget, L"media\\menuBack.png");
-	assert(texture);
+	
 }
 
 
@@ -38,7 +37,7 @@ MainMenu::~MainMenu()
 
 void MainMenu::Draw(Graphics & gfx)
 {
-	gfx.DrawSprite(D2D1::Matrix3x2F::Identity(), border.ToD2D(), texture->GetBitmap());
+	gfx.DrawSprite(D2D1::Matrix3x2F::Identity(), border.ToD2D(), Locator::ImageManager->GetImage("menuBack1")->GetTexture());
 	gfx.DrawRectangle(D2D1::Matrix3x2F::Identity(), border.ToD2D(), D2D1::ColorF(1.0f, 1.0f, 1.0f, 1.0f));
 	gfx.DrawFilledScreenRectangle(border.ToD2D(), D2D1::ColorF(0.2f, 0.2f, 0.9f, 0.20f));
 	D2D1_COLOR_F colour = D2D1::ColorF(0.0f, 1.0f, 0.0f, 1.25f);
