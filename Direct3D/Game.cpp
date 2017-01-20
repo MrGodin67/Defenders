@@ -9,9 +9,10 @@ Game::Game(Direct3DWindow & wnd)
 	window(wnd),
 	gfx(wnd.ScreenWidth(),wnd.ScreenHeight(),wnd.WindowHandle(),
 		true, FULL_SCREEN,1000.0f,0.01f),
-	m_cam((float)wnd.ScreenWidth(), (float)wnd.ScreenHeight()),
+	m_cam(&gfx,(float)wnd.ScreenWidth(), (float)wnd.ScreenHeight()),
 	m_grid(m_cam),
-	m_input(wnd.m_input)
+	m_input(wnd.m_input),
+	pos(48.0f,48.0f)
 {
 	LoadSounds();
 	LoadImages();
@@ -25,7 +26,8 @@ Game::Game(Direct3DWindow & wnd)
 
 	testFile.WriteFile();
 	testFile.ReadFile();
-
+	
+	int q = 0;
 }
 
 bool Game::Play(const float& deltaTime)
@@ -54,7 +56,8 @@ HRESULT Game::ConstructScene(const float& deltaTime)
 			m_grid.SetBasePlacementTiles(m_mousePt);
 
 		m_unitManager->Update(deltaTime, e_mouse,e_kbd);
-		m_baseManager->Update(deltaTime);
+		
+		m_itemSelector->Update(deltaTime);
 	}
 		break;
 	case _GameState::paused:
@@ -123,10 +126,10 @@ HRESULT Game::RenderScene()
 	{
 	case _GameState::running:
 		m_grid.Draw(gfx, m_cam.GetViewFrame(),m_itemSelector->CurrentSelectedBase());
-		m_baseManager->Draw(gfx,m_cam);
+	
 		m_unitManager->Draw(gfx);
 		// draw last
-		m_itemSelector->Draw(gfx);
+		m_itemSelector->Draw(gfx,m_cam);
 		
 		
 		break;
@@ -268,7 +271,7 @@ void Game::HandleUserEvents(Mouse::Event mouse, Keyboard::Event kbd)
 			Tile tile;
 			if (m_grid.SetBase(Vec2i(m_cam.ConvertToWorldSpace(m_mousePt)), tile))
 			{
-				m_baseManager->AddBase(Vec2i(m_cam.ConvertToWorldSpace(tile.GetWorldPosition())), m_itemSelector->CurrentSelectedBase()->ImageIndex());
+				m_itemSelector->SetBaseIntoWorld(tile.GetRect());
 				m_itemSelector->BaseItemSelected(false);
 				m_soundFX->Play("constructionstarted");
 			}

@@ -1,12 +1,16 @@
 #pragma once
 
+
 #include "includes.h"
 #include "Vec2.h"
 #include "Rect.h"
-class Camera 
+#include "RenderTarget.h"
+class Camera : public RenderTarget
 {
+	RenderTarget * m_nextRenderTarget = nullptr;
 public:// next = vp
-	Camera(float width, float height);
+	Camera(RenderTarget * next,float width, float height);
+	virtual void Rasterize(class Drawable& obj)override;
 	Vec2f GetPos();
 	void ConfineToMap(RectF& map_frame);
 	void Resize(float& w, float& h);

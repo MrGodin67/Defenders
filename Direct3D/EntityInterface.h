@@ -3,20 +3,11 @@
 #include "includes.h"
 #include "Rect.h"
 
-enum _EntityType
-{
-	drone,
-	fighter,
-	artillary,
-	radar,
-	turret,
-	tech,
-	data,
-	none
-};
+enum _EntityType;
+
 class Entity
 {
-	_EntityType m_type = none;
+	_EntityType m_type;
 public:
 	Entity() {}
 	Entity(_EntityType type)

@@ -16,6 +16,7 @@
 #include "EntityManager.h"
 #include "FileWriter.h"
 #include "TextureManager.h"
+#include "VecRect.h"
 
 class Game
 {
@@ -39,7 +40,7 @@ class Game
 	std::unique_ptr<TextureManager> m_textureManager;
 	
 	FileHandler testFile;
-	
+	Extents<float> pos;
 	std::unordered_map<std::string, std::unique_ptr<MenuInterface>> m_menus;
 	_GameState m_gameState = _GameState::paused;
 private:

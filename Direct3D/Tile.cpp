@@ -6,36 +6,34 @@
 float Tile::ms_width = 0.0f;
 float Tile::ms_height = 0.0f;
 
-Tile::Tile()
-	:m_image(nullptr, -1, 0, 0, {0.0f,0.0f},none)
+Tile::Tile(Animation::RenderDesc& desc,bool passable)
+	:Animation(desc),m_passable(passable)
 {
 }
 
-Tile::Tile(SpriteSheet * image, const int & imageIndex, const Vec2f & pos, bool passable)
-	:m_image(image,imageIndex,ms_width,ms_height,pos,none),
-	m_passable(passable)
-{
-	
-}
 
-void Tile::draw(Graphics & gfx,Camera& cam)
+
+void Tile::Draw(Camera& cam)
 {
+	cam.Rasterize(GetDrawable());
 	
-	m_image.TransformToCamera(cam.GetPos());
-	m_visibleRect = m_image.GetAABB();
-	m_image.Draw(gfx);
+	
+
 	D2D1_COLOR_F color = D2D1::ColorF(0.08f, 0.08f, 0.08f, m_colorAlphaBlend);
 	//gfx.DrawFilledScreenRectangle(m_visibleRect.ToD2D(), color);
 }
 
 RectF Tile::GetRect()
 {
-	return m_image.GetAABB();
+	return RectF(m_renderDesc.drawRect.left,
+		m_renderDesc.drawRect.top,
+		m_renderDesc.drawRect.right,
+		m_renderDesc.drawRect.bottom);
 }
 
 Vec2f Tile::GetWorldPosition()
 {
-	return Vec2f(m_image.GetAABB().left + 2.0f, m_image.GetAABB().top + 2.0f);
+	return Vec2f(m_renderDesc.drawRect.left + 2.0f, m_renderDesc.drawRect.top + 2.0f);
 }
 
 void Tile::SetVisibleColorAlpha(float alpha)

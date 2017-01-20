@@ -15,11 +15,12 @@ class StartMenu : public MenuInterface
 		WCHAR* text;
 	};
 
-	Button Buttons[6];
-	int numButtons = 6;
+	Button Buttons[8];
+	int numButtons = 8;
 	DrawRects UnitRects[5];
 	DrawRects BaseRects[4];
 	DrawRects TechRects[3];
+	DrawRects HowTo;
 	RectF border;
 	int lastOver = -1;
 
@@ -36,4 +37,5 @@ public:
 	void DrawBases(class Graphics& gfx);
 	void DrawObjectives(class Graphics& gfx);
 	void DrawTechnology(class Graphics& gfx);
+	void DrawHowTo(class Graphics& gfx);
 };

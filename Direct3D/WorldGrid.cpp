@@ -24,44 +24,64 @@ void WorldGrid::Create(std::vector<std::string>& map)
 		for (int c = 0; c < (int)str.size(); c++)
 		{
 			Vec2f p((float)(c * this->m_cellWidth), (float)(r * this->m_cellHeight));
+			Animation::RenderDesc desc;
+			desc.drawRect = D2D1::RectF(p.x, p.y, p.x + m_cellWidth, p.y + m_cellHeight);
+			desc.image = sprite->GetTexture();
+			desc.angle = 0.0f;
 			switch (str[c])
 			{
 			case ' ':
-				m_cells(r, c) = Tile(sprite.get(), 0, p, true);
+				desc.clipRect = sprite->GetClippedImage(0).ToD2D();
+				m_cells(r, c) = Tile(desc, true);
 				break;
 			case '(':
-				m_cells(r, c) = Tile(sprite.get(), 6, p, false);
+				desc.clipRect = sprite->GetClippedImage(6).ToD2D();
+				m_cells(r, c) = Tile(desc, false);
 				break;
 			case ')':
-				m_cells(r, c) = Tile(sprite.get(), 7, p, false);
+				desc.clipRect = sprite->GetClippedImage(7).ToD2D();
+				m_cells(r, c) = Tile(desc, false);
 				break;
 			case '<':
-				m_cells(r, c) = Tile(sprite.get(), 5, p, false);
+				desc.clipRect = sprite->GetClippedImage(5).ToD2D();
+				m_cells(r, c) = Tile(desc, false);
 				break;
 			case '>':
-				m_cells(r, c) = Tile(sprite.get(), 4, p, false);
+				desc.clipRect = sprite->GetClippedImage(4).ToD2D();
+				m_cells(r, c) = Tile(desc, false);
 				break;
 			case '|':
-				m_cells(r, c) = Tile(sprite.get(), 2, p, false);
+				desc.clipRect = sprite->GetClippedImage(2).ToD2D();
+				m_cells(r, c) = Tile(desc, false);
 				break;
 			case '-':
-				m_cells(r, c) = Tile(sprite.get(), 3, p, false);
+				desc.clipRect = sprite->GetClippedImage(3).ToD2D();
+				m_cells(r, c) = Tile(desc, false);
 				break;
 			case '+':
-				m_cells(r, c) = Tile(sprite.get(), 1, p, false);
+				desc.clipRect = sprite->GetClippedImage(1).ToD2D();
+				m_cells(r, c) = Tile(desc, false);
 				break;
 			case 'T':
-				m_cells(r, c) = Tile(sprite.get(), 9, p, false);
+				desc.clipRect = sprite->GetClippedImage(9).ToD2D();
+				m_cells(r, c) = Tile(desc, false);
 				break;
 			case 'R':
-				m_cells(r, c) = Tile(sprite.get(), 8, p, false);
+				desc.clipRect = sprite->GetClippedImage(8).ToD2D();
+				m_cells(r, c) = Tile(desc, false);
 				break;
 			case 'W':
-				m_cells(r, c) = Tile(sprite.get(), 10, p, false);
+				desc.clipRect = sprite->GetClippedImage(10).ToD2D();
+				m_cells(r, c) = Tile(desc, false);
 				break;
 			case 'S':
-				m_cells(r, c) = Tile(sprite.get(), 11, p,true);
+				desc.clipRect = sprite->GetClippedImage(11).ToD2D();
+				m_cells(r, c) = Tile(desc, true);
 				break;
+			default:// passable ground
+					desc.clipRect = sprite->GetClippedImage(0).ToD2D();
+					m_cells(r, c) = Tile(desc, true);
+					break;
 			}
 			
 			
@@ -121,7 +141,7 @@ void WorldGrid::Draw(Graphics & gfx, RectF& viewport,Base* selectedBase )
 	{
 		for (int c = startX; c < endX; c++)
 		{
-			m_cells(r, c).draw(gfx,m_cam);
+			m_cells(r, c).Draw(m_cam);
 
 		}
 	}

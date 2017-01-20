@@ -124,6 +124,11 @@ void Graphics::RenderText(LPWSTR String, IDWriteTextFormat *pFormat,
 	m_pD2DRenderTarget->DrawTextW(String, strLen, pFormat, DrawRect, m_pD2DWhiteBrush);
 }
 
+void Graphics::Rasterize(Drawable & obj)
+{
+	obj.Rasterize(*this);
+}
+
 
 HRESULT Graphics::CreateTextObjects()
 {
@@ -135,6 +140,8 @@ HRESULT Graphics::CreateTextObjects()
 	result = m_TextFactory.InitializeFont("Tahoma20", { L"Tahoma", 20.0f });
 	if (!result) { return E_FAIL; }
 	result = m_TextFactory.InitializeFont("Tahoma18", { L"Tahoma", 18.0f });
+	if (!result) { return E_FAIL; }
+	result = m_TextFactory.InitializeFont("Tahoma14", { L"Tahoma", 14.0f });
 	if (!result) { return E_FAIL; }
 	result = m_TextFactory.InitializeFont("Tahoma12", { L"Tahoma", 12.0f });
 	if (!result) { return E_FAIL; }

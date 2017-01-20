@@ -56,5 +56,5 @@ private:
 	pAStarNode end_node;
 	std::vector<Vec2f> pathPositions;
 	float cellSize;
-	int COL_SIZE, ROW_SIZE;
+	int columns, rows;
 };

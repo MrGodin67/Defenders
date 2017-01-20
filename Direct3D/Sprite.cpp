@@ -1,5 +1,6 @@
 #include "Sprite.h"
 #include "Graphics.h"
+#include "Locator.h"
 Sprite::Sprite(SpriteSheet* image, int imageIndex, float width, float height, Vec2f pos, _EntityType type)
 	:Entity(type),
 	m_image(image),m_imageIndex(imageIndex),m_width(width),m_height(height),m_pos(pos)
@@ -7,10 +8,7 @@ Sprite::Sprite(SpriteSheet* image, int imageIndex, float width, float height, Ve
 	m_drawRect = { pos.x,pos.y,pos.x + m_width,pos.y + m_height };
 }
 
-void Sprite::Update(const float & dt)
-{
-	
-}
+
 
 void Sprite::Draw(Graphics & gfx)
 {
@@ -54,3 +52,27 @@ void Sprite::SetTexture(SpriteSheet * image, int imageIndex, float width, float 
 }
 
 
+
+
+///////////////////////////////////////////////////////////////////
+// Text Sprite
+///////////////////////////////////////////////////////////////////
+
+
+
+void TextSprite::UpdateText(std::wstring str)
+{
+	wsprintf(this->text, L"%s", str.c_str());
+}
+
+void TextSprite::Draw(Graphics & gfx)
+{
+	if (drawBackground)
+	{
+		gfx.DrawFilledScreenRectangle(pos.ToD2D(), backcolor);
+		gfx.DrawRectangle(D2D1::Matrix3x2F::Identity(), pos.ToD2D(), color);
+
+	}
+	gfx.RenderText(text, pFormat, pos.ToD2D(), color);
+}
+	

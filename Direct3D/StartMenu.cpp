@@ -57,8 +57,10 @@ StartMenu::StartMenu(Vec2f screenCenter, float width, float height)
 	text.push_back(L"Bases");
 	text.push_back(L"Technology");
 	text.push_back(L"Objective");
+	text.push_back(L"How To");
+	text.push_back(L"Start New Game");
 	text.push_back(L"Exit");
-	for (int c = 0; c < numButtons -1; c++)
+	for (int c = 0; c < numButtons -2; c++)
 	{
 		Buttons[c].frame = RectF(x, y, x + w, y + h);
 		Buttons[c].id = 0;
@@ -66,7 +68,11 @@ StartMenu::StartMenu(Vec2f screenCenter, float width, float height)
 		y += inc;
 		
 	}
-	y += inc * 6;
+	y += inc ;
+	Buttons[numButtons - 2].frame = RectF(x, y, x + w, y + h);
+	Buttons[numButtons - 2].id = 1;
+	Buttons[numButtons - 2].text = L"New Game";
+	y += inc*4;
 	Buttons[numButtons - 1].frame = RectF(x, y, x + w, y + h);
 	Buttons[numButtons - 1].id = 1;
 	Buttons[numButtons - 1].text = L"Back";
@@ -84,7 +90,8 @@ StartMenu::StartMenu(Vec2f screenCenter, float width, float height)
 	TechRects[2].textPos =  { border.left + 328.0f,border.top + 80.0f,border.right - 80.0f,border.bottom - 80.0f };
 	TechRects[2].text = L"  Collect as much enemy technology as you can. Constuct it by combining scripts,found on data storage units, along with hardware found amongst the enemy wreckage. You can then sell it to enterprises that can further enhance it's capabilities, or you may choose to use the technology to upgrade your units. Rest assured, everything has it's price..";
 	
-	
+	HowTo.textPos = { border.left + 328.0f,border.top + 80.0f,border.right - 80.0f,border.bottom - 80.0f };
+	HowTo.text = L"  Press Control + left mouse button to select Units\\Bases to place in world";
 
 
 
@@ -128,6 +135,9 @@ void StartMenu::Draw(Graphics & gfx)
 			case 4:
 				DrawObjectives(gfx);
 				break;
+			case 5:
+				DrawHowTo(gfx);
+				break;
 			}
 		}
 		else
@@ -164,7 +174,7 @@ int StartMenu::OnMouseOver(Vec2i & mouse)
 {
 	
 	Buttons[0].drawFrame = Buttons[1].drawFrame = Buttons[2].drawFrame = 
-		Buttons[3].drawFrame = Buttons[4].drawFrame = Buttons[5].drawFrame=false;
+		Buttons[3].drawFrame = Buttons[4].drawFrame = Buttons[5].drawFrame= Buttons[6].drawFrame = Buttons[7].drawFrame = false;
 	for (int c = 0; c < numButtons; c++)
 	{
 
@@ -244,5 +254,13 @@ void StartMenu::DrawTechnology(Graphics & gfx)
 
 	}
 	
+
+}
+
+void StartMenu::DrawHowTo(Graphics & gfx)
+{
+	D2D1_COLOR_F color = D2D1::ColorF(0.0f, 1.0f, 0.0f, 1.0f);
+	Locator::TextManager->GetFormat("Tahoma20")->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+	gfx.RenderText(HowTo.text, Locator::TextManager->GetFormat("Tahoma20"), HowTo.textPos.ToD2D(), color);
 
 }

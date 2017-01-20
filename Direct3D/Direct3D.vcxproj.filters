@@ -105,9 +105,6 @@
     <ClCompile Include="Locator.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>Objects\Sprite</Filter>
-    </ClCompile>
     <ClCompile Include="MoveableObject.cpp">
       <Filter>Objects\Game Pieces</Filter>
     </ClCompile>
@@ -149,6 +146,18 @@
     </ClCompile>
     <ClCompile Include="TextureManager.cpp">
       <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Objects\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationSequence.cpp">
+      <Filter>Objects\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite2.cpp">
+      <Filter>Objects\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="StatusRect.cpp">
+      <Filter>Objects\Sprite</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -215,9 +224,6 @@
     <ClInclude Include="EntityInterface.h">
       <Filter>Objects\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>Objects\Sprite</Filter>
-    </ClInclude>
     <ClInclude Include="MoveableObject.h">
       <Filter>Objects\Game Pieces</Filter>
     </ClInclude>
@@ -277,6 +283,27 @@
     </ClInclude>
     <ClInclude Include="InputManager.h">
       <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Objects\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Drawable.h">
+      <Filter>Objects\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTarget.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationSequence.h">
+      <Filter>Objects\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="VecRect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite2.h">
+      <Filter>Objects\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusRect.h">
+      <Filter>Objects\Sprite</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

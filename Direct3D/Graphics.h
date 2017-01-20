@@ -2,7 +2,9 @@
 #include "Direct3D_2D.h"
 #include "DirectWrite.h"
 #include "Rect.h"
-class Graphics : public Direct3D
+#include "Animation.h"
+#include "RenderTarget.h"
+class Graphics : public Direct3D,public RenderTarget
 {
 private:
 	TextHandler m_TextFactory;
@@ -21,9 +23,13 @@ public:
 	void DrawSprite(D2D1_MATRIX_3X2_F &trans, D2D1_RECT_F &PosSize, ID2D1Bitmap *pSprite,
 		D2D1_RECT_F *ClipRect = nullptr,float Opacity = 1.0f,
 		D2D1_BITMAP_INTERPOLATION_MODE InterpMode = D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
+	void DrawSprite(D2D1_MATRIX_3X2_F &trans, Animation::RenderDesc& desc)
+	{
+		DrawSprite(trans, desc.drawRect, desc.image, &desc.clipRect, desc.opague, desc.interpMode);
+	}
 	void RenderText(LPWSTR String, IDWriteTextFormat *pFormat,
 		const D2D1_RECT_F &DrawRect, D2D1_COLOR_F &Color);
-	
+	virtual void Rasterize( Drawable& obj)override;
 private:
 	HRESULT CreateTextObjects();
 };

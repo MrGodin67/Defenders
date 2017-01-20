@@ -5,10 +5,7 @@
 #include "Graphics.h"
 #include <algorithm>
 #include <cmath>
-void UnitManager::HandleInput(Entity * obj)
-{
-	
-}
+
 void UnitManager::HandleInput( Mouse::Event& mouse, Keyboard::Event& kbd)
 {
 	if (mouse.GetType() == Mouse::Event::LPress)
@@ -17,7 +14,7 @@ void UnitManager::HandleInput( Mouse::Event& mouse, Keyboard::Event& kbd)
 		for (size_t index = 0;index <  m_playerEntites.size();index++)
 		{
 		
-			if (m_playerEntites[index]->GetAABB().Contains(Vec2i(mouse.GetPosX(),mouse.GetPosY())))
+			if (m_playerEntites[index]->GetRect().Contains(Vec2i(mouse.GetPosX(),mouse.GetPosY())))
 			{
 				switch (m_playerEntites[index]->Type())
 				{
@@ -44,9 +41,13 @@ void UnitManager::HandleInput( Mouse::Event& mouse, Keyboard::Event& kbd)
 			m_selectedMoveableEntity->SetWayPoints(mp);
 		
 		}
+	
+			
+		
 	}
+	
 }
-UnitManager::UnitManager(InputManager& input,WorldGrid& world,Camera & cam, std::wstring imageFile)
+UnitManager::UnitManager(InputManager& input, WorldGrid& world, Camera & cam, std::wstring imageFile)
 
 	:m_cam(cam),
 	m_grid(world),
@@ -54,27 +55,46 @@ UnitManager::UnitManager(InputManager& input,WorldGrid& world,Camera & cam, std:
 {
 	m_images = std::make_unique<SpriteSheet>(imageFile, 64.0f, 64.0f);
 	assert(m_images);
+	LifeRect::StatusRect::StatusRectDesc desc;
+	desc.drawRect = { 0.0f,0.0f,48.0f,48.0f };
+	desc.color = { 1.0f,1.0f,1.0f,1.0f };
+	desc.alphaBlend = 1.0f;
+	m_life.emplace_back(desc, 100.0f,8.0f);
 }
 
 void UnitManager::AddPlayerUnit(_EntityType type, Vec2i pos)
 {
+	Animation::RenderDesc rDesc;
+	rDesc.drawRect.left = pos.x * 64.0f;
+	rDesc.drawRect.top = pos.y * 64.0f;
+	rDesc.drawRect.right = rDesc.drawRect.left + 48.0f;
+	rDesc.drawRect.bottom = rDesc.drawRect.top + 48.0f;
+	std::vector<int> indices;
+	indices.clear();
 	switch (type)
 	{
 	case drone:
-		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid,m_images.get(), 0, 48.0f, 48.0f, speeds[3], Vec2f(pos.x*64.0f, pos.y* 64.0f), drone));
+		
+		indices.push_back(1);
+		indices.push_back(0);
+		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid,rDesc, indices,0.25f,"player_units", speeds[3], drone));
 		
 		break;
 	case fighter:
-		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid, m_images.get(), 1, 48.0f, 48.0f, speeds[2], Vec2f(pos.x*64.0f, pos.y* 64.0f), fighter));
+		indices.push_back(1);
+		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid, rDesc, indices, 0.25f, "player_units", speeds[2] , fighter));
 		break;
 	case artillary:
-		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid, m_images.get(), 2, 48.0f, 48.0f, speeds[1], Vec2f(pos.x*64.0f, pos.y* 64.0f), artillary));
+		indices.push_back(2);
+		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid, rDesc, indices, 0.25f, "player_units", speeds[1], artillary));
 		break;
 	case radar:
-		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid, m_images.get(), 3, 48.0f, 48.0f, speeds[0], Vec2f(pos.x*64.0f, pos.y* 64.0f), radar));
+		indices.push_back(3);
+		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid, rDesc, indices, 0.25f, "player_units", speeds[0], radar));
 		break;
 	case turret:
-		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid, m_images.get(), 4, 48.0f, 48.0f, speeds[0], Vec2f(pos.x*64.0f, pos.y* 64.0f), turret));
+		indices.push_back(4);
+		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid, rDesc, indices, 0.25f, "player_units", speeds[0], turret));
 		break;
 	}
 }
@@ -103,7 +123,11 @@ void UnitManager::SelectUnit(Vec2f world)
 
 void UnitManager::Update(const float & dt, Mouse::Event& mouse, Keyboard::Event& kbd)
 {
+	static float health = 0.5f;
+	m_life[0].UpdateHealth(health);
+	health += 0.15f;
 	HandleInput(mouse,kbd);
+	
 	for (size_t index = 0; index < m_playerEntites.size(); index++)
 	{
 		switch (m_playerEntites[index]->Type())
@@ -117,8 +141,7 @@ void UnitManager::Update(const float & dt, Mouse::Event& mouse, Keyboard::Event&
 			MoveableObject* obj = (MoveableObject*)m_playerEntites[index].get();
 			
 			obj->Update(dt);
-			obj->TransformToCamera(m_cam.GetPos());
-			m_grid.SetVisibility(obj->GetCenter());
+			m_grid.SetVisibility(obj->GetPosition());
 			
 
 		  
@@ -132,21 +155,27 @@ void UnitManager::Draw(Graphics & gfx)
 {
 	for (auto& it : m_playerEntites)
 	{
-		it->Draw(gfx);
+		it->Draw(m_cam);
 	}
+	//if (m_selectedMoveableEntity)
+	//{
+	//	m_selectedUnitRectAngle += 1.1f;
+	//	if (m_selectedUnitRectAngle > 360.0f)m_selectedUnitRectAngle = 0.0f;
+	//	RectF rect = m_selectedMoveableEntity->GetRect();
+	//	Tile* tile = m_grid.GetTile(m_selectedMoveableEntity->GetPosition());
+	//	float w = rect.right - rect.left;
+	//	float h = rect.bottom - rect.top;
+	//	h = h * 0.5f;// half it
+	//	w = w * 0.5f;
+	//	D2D1_POINT_2F center = { rect.left + w,rect.top + h };
+	//	gfx.DrawRectangle(D2D1::Matrix3x2F::Rotation(m_selectedUnitRectAngle, center), rect.ToD2D(), D2D1::ColorF(1.0f, 1.0f, 1.0f, 1.0f));
+	//	gfx.DrawRectangle(D2D1::Matrix3x2F::Identity(),tile->GetRect().ToD2D(), D2D1::ColorF(1.0f, 1.0f, 1.0f, 1.0f));
+
+	//}
 	if (m_selectedMoveableEntity)
 	{
-		m_selectedUnitRectAngle += 1.1f;
-		if (m_selectedUnitRectAngle > 360.0f)m_selectedUnitRectAngle = 0.0f;
-		RectF rect = m_selectedMoveableEntity->GetAABB();
-		Tile* tile = m_grid.GetTile(m_selectedMoveableEntity->GetCenter());
-		float w = rect.right - rect.left;
-		float h = rect.bottom - rect.top;
-		h = h * 0.5f;// half it
-		w = w * 0.5f;
-		D2D1_POINT_2F center = { rect.left + w,rect.top + h };
-		gfx.DrawRectangle(D2D1::Matrix3x2F::Rotation(m_selectedUnitRectAngle, center), rect.ToD2D(), D2D1::ColorF(1.0f, 1.0f, 1.0f, 1.0f));
-		gfx.DrawRectangle(D2D1::Matrix3x2F::Identity(),tile->GetRect().ToD2D(), D2D1::ColorF(1.0f, 1.0f, 1.0f, 1.0f));
-
+		m_life[0].SetPosition(Vec2f(m_selectedMoveableEntity->GetRect().left,
+			m_selectedMoveableEntity->GetRect().top));
 	}
+	m_cam.Rasterize(m_life[0].GetDrawable());
 }

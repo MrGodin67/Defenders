@@ -1,5 +1,5 @@
 #include "AStar.h"
-#include "Sprite.h"
+#include "Sprite2.h"
 void AStar::swap(int idx1, int idx2)
 {
 	pAStarNode tmp = openTable[idx1];
@@ -21,11 +21,11 @@ std::vector<Vec2i> AStar::getPossiblePlacements(Vec2i pos, int group_size)
 	// add non barrier cells to open list
 	for (int y = py - offset; y <= py + offset; y++)
 	{
-		if (y < 0 || y >= ROW_SIZE)
+		if (y < 0 || y >= rows)
 			continue;
 		for (int x = px - offset; x <= px + offset; x++)
 		{
-			if (x < 0 || x >= COL_SIZE)
+			if (x < 0 || x >= columns)
 				continue;
 			if (maze(x, y).s_style != 0)
 			{
@@ -130,42 +130,42 @@ void AStar::get_neighbors(pAStarNode curr_node, pAStarNode end_node)
 	int x = curr_node->s_x;
 	int y = curr_node->s_y;
 
-	if ((x + 1) >= 0 && (x + 1) < ROW_SIZE && y >= 0 && y < COL_SIZE)
+	if ((x + 1) >= 0 && (x + 1) < rows && y >= 0 && y < columns)
 	{
 		insert_to_opentable(x + 1, y, curr_node, end_node, 10);
 	}
 
-	if ((x - 1) >= 0 && (x - 1) < ROW_SIZE && y >= 0 && y < COL_SIZE)
+	if ((x - 1) >= 0 && (x - 1) < rows && y >= 0 && y < columns)
 	{
 		insert_to_opentable(x - 1, y, curr_node, end_node, 10);
 	}
 
-	if (x >= 0 && x < ROW_SIZE && (y + 1) >= 0 && (y + 1) < COL_SIZE)
+	if (x >= 0 && x < rows && (y + 1) >= 0 && (y + 1) < columns)
 	{
 		insert_to_opentable(x, y + 1, curr_node, end_node, 10);
 	}
 
-	if (x >= 0 && x < ROW_SIZE && (y - 1) >= 0 && (y - 1) < COL_SIZE)
+	if (x >= 0 && x < rows && (y - 1) >= 0 && (y - 1) < columns)
 	{
 		insert_to_opentable(x, y - 1, curr_node, end_node, 10);
 	}
 
-	if ((x + 1) >= 0 && (x + 1) < ROW_SIZE && (y + 1) >= 0 && (y + 1) < COL_SIZE)
+	if ((x + 1) >= 0 && (x + 1) < rows && (y + 1) >= 0 && (y + 1) < columns)
 	{
 		insert_to_opentable(x + 1, y + 1, curr_node, end_node, 14);
 	}
 
-	if ((x + 1) >= 0 && (x + 1) < ROW_SIZE && (y - 1) >= 0 && (y - 1) < COL_SIZE)
+	if ((x + 1) >= 0 && (x + 1) < rows && (y - 1) >= 0 && (y - 1) < columns)
 	{
 		insert_to_opentable(x + 1, y - 1, curr_node, end_node, 14);
 	}
 
-	if ((x - 1) >= 0 && (x - 1) < ROW_SIZE && (y + 1) >= 0 && (y + 1) < COL_SIZE)
+	if ((x - 1) >= 0 && (x - 1) < rows && (y + 1) >= 0 && (y + 1) < columns)
 	{
 		insert_to_opentable(x - 1, y + 1, curr_node, end_node, 14);
 	}
 
-	if ((x - 1) >= 0 && (x - 1) < ROW_SIZE && (y - 1) >= 0 && (y - 1) < COL_SIZE)
+	if ((x - 1) >= 0 && (x - 1) < rows && (y - 1) >= 0 && (y - 1) < columns)
 	{
 		insert_to_opentable(x - 1, y - 1, curr_node, end_node, 14);
 	}
@@ -178,12 +178,12 @@ void AStar::Reset()
 	open_node_count = close_node_count = 0;
 	top = -1;
 	pathPositions.resize(0);
-	closedTable.resize(ROW_SIZE*COL_SIZE);
-	openTable.resize(ROW_SIZE*COL_SIZE);
-	pathStack.resize(ROW_SIZE*COL_SIZE);
-	for (int i = 0; i < (int)ROW_SIZE - 1; i++)
+	closedTable.resize(rows*columns);
+	openTable.resize(rows*columns);
+	pathStack.resize(rows*columns);
+	for (int i = 0; i < (int)rows ; i++)
 	{
-		for (int j = 0; j < (int)COL_SIZE - 1; j++)
+		for (int j = 0; j < (int)columns ; j++)
 		{
 			
 			maze(i, j).s_g = 0;
@@ -203,11 +203,11 @@ void AStar::Init(mapList& map,float cell_size)
 	open_node_count = close_node_count = 0;
 	top = -1;
 	pathPositions.resize(0);
-	ROW_SIZE = (int)map.size();
-	COL_SIZE = (int)map[0].size();
-	closedTable.resize(ROW_SIZE*COL_SIZE);
-	openTable.resize(ROW_SIZE*COL_SIZE);
-	pathStack.resize(ROW_SIZE*COL_SIZE);
+	rows = (int)map.size();
+	columns = (int)map[0].size();
+	closedTable.resize(rows*columns);
+	openTable.resize(rows*columns);
+	pathStack.resize(rows*columns);
 	maze.resize((int)map.size(), (int)map[0].size());
 	for (int i = 0; i < (int)map.size(); i++)
 	{

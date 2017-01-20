@@ -1,13 +1,14 @@
 
 #include "Camera.h"
+#include "Drawable.h"
 
-
-Camera::Camera(float width, float height)
+Camera::Camera(RenderTarget * next,float width, float height)
 	:
 	pos({ 0.0f,0.0f }),
 	center({ width / 2.0f,height / 2.0f }),
 	screen_width(width),
-	screen_height(height)
+	screen_height(height),
+	m_nextRenderTarget(next)
 {
 	viewFrame.left = pos.x;
 	viewFrame.top = pos.y;
@@ -15,6 +16,11 @@ Camera::Camera(float width, float height)
 	viewFrame.bottom = viewFrame.top + screen_height;
 	Resize(width, height);
 	scroll_pos = center;
+}
+void Camera::Rasterize(Drawable & obj)
+{
+	obj.Transform(D2D1::Matrix3x2F::Translation({ -pos.x,-pos.y }));
+	m_nextRenderTarget->Rasterize(obj);
 }
 void Camera::Scroll(Vec2f& dir)
 {

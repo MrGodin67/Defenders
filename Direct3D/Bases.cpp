@@ -1,15 +1,22 @@
 #include "Bases.h"
 #include "Graphics.h"
 #include "Camera.h"
-Base::Base(SpriteSheet * image, int imageIndex, float w, float h,Vec2i pos,
-	float constuctionTime)
-	:m_image(image,imageIndex,w,h,Vec2f(pos),none),
-	m_underConstruction(true),
-	m_constuctionTime(constuctionTime),
-	m_width(w),
-	m_imageIndex(imageIndex)
+Base::Base(Animation::RenderDesc& desc, std::vector<int> indices, float interval,
+	std::string imageName, _EntityType type,float constructionTime)
+	:Sprite(desc,indices,interval,imageName,type),
+	m_underConstruction(false),
+	m_constuctionTime(constructionTime),
+	m_width(desc.drawRect.right - desc.drawRect.left)
 {
 	
+}
+
+void Base::SetPosition(Vec2f pos,float w,float h)
+{
+	m_underConstruction = true;
+	m_constuction_Timer = 0.0f;
+	m_width = w; 
+	m_position = pos;
 }
 
 void Base::SetBuildTypes(_EntityType a, _EntityType b, _EntityType c, _EntityType d,int numTypes)
@@ -38,12 +45,12 @@ void Base::Update(const float & dt)
 			Locator::SoundEngine->Play("constructioncomplete");
 		}
 	}
-	if (m_building)
+	if (m_buildingUnit)
 	{
 		if ((m_build_Timer += dt) > m_buildTime)
 		{
 			m_buildingComplete = true;
-			m_building = false;
+			m_buildingUnit = false;
 		}
 	}
 }
@@ -51,16 +58,17 @@ void Base::Update(const float & dt)
 void Base::Draw(Graphics & gfx, Camera &cam)
 {
 	
-	m_image.TransformToCamera(cam.GetPos());
-	m_image.Draw(gfx);
+	cam.Rasterize(GetDrawable());
+	
 	if (m_underConstruction)
 	{
+		RectF rect = GetRect();
 		float percent = m_constuction_Timer / m_constuctionTime;
-		RectF dr(m_image.GetAABB().left, m_image.GetAABB().top - 8.0f,
-			m_image.GetAABB().left + (m_width * percent), m_image.GetAABB().top + 6.0f);
+		RectF dr(rect.left, rect.top - 8.0f,
+			rect.left + (m_width * percent), rect.top + 6.0f);
 
 		gfx.DrawFilledScreenRectangle(dr.ToD2D(), D2D1::ColorF(0.0f, 1.0f, 0.0f, 1.0f));
-		gfx.DrawFilledScreenRectangle(m_image.GetAABB().ToD2D(), D2D1::ColorF(0.9f, 0.0f, 0.0f, 0.2f));
+		gfx.DrawFilledScreenRectangle(rect.ToD2D(), D2D1::ColorF(0.9f, 0.0f, 0.0f, 0.2f));
 
 	}
 }
@@ -68,11 +76,52 @@ void Base::Draw(Graphics & gfx, Camera &cam)
 void Base::Draw(Graphics & gfx)
 {
 	
-	m_image.Draw(gfx);
+	
 	
 }
 
-RectF Base::GetAABB()
+std::wstring Base::GetText()
 {
-	return m_image.GetAABB();
+	std::wstring Text;
+	if (!m_active)
+	{
+		Text += L"Cost " + std::to_wstring(m_cost) + L"\n";
+	}
+	
+	if (m_underConstruction)
+	{
+		Text += L"Under Constuction [ " + std::to_wstring((int)((m_constuction_Timer / m_constuctionTime) * 100.0f)) + L" ]% complete\n";
+	}
+	for (int c = 0; c < m_numUnitTypes; c++)
+	{
+		switch (m_unitTypes[c])
+		{
+		case _EntityType::drone:
+			Text += L"Drone : " + std::to_wstring(m_cost) + L" credits\n";
+			break;
+		case _EntityType::fighter:
+			Text += L"Fighter : " + std::to_wstring(m_cost) + L" credits\n";
+			break;
+		case _EntityType::artillary:
+			Text += L"Artillary : " + std::to_wstring(m_cost) + L" credits\n";
+			break;
+		case _EntityType::radar:
+			Text += L"Radar: " + std::to_wstring(m_cost) + L" credits\n";
+			break;
+		case _EntityType::turret:
+			Text += L"Turret: " + std::to_wstring(m_cost) + L" credits\n";
+			break;
+		case _EntityType::tech:
+			Text += L"Technology: " + std::to_wstring(m_cost) + L" credits\n";
+			break;
+		case _EntityType::data:
+			Text += L"Data Storage: " + std::to_wstring(m_cost) + L" credits\n";
+			break;
+		}
+	}
+	
+	//= L"Base Data :\n Cost " + std::to_wstring(100);
+	return Text;
 }
+
+

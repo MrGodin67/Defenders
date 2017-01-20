@@ -2,15 +2,20 @@
 
 #include "includes.h"
 #include "SpriteSheet.h"
-#include "Sprite.h"
+#include "Sprite2.h"
 #include "Table.h"
 #include "Bases.h"
-
+#include "Animation.h"
 class ItemsSelector
 {
-	
+	int m_credits = 1000;
 public:
-	
+	struct BasePlace
+	{
+		RectF pos;
+		Base* owner;
+		int imageIndex;
+	};
 	struct Item
 	{
 	
@@ -33,6 +38,7 @@ public:
 	
 
 	};
+	
 public:
 	ItemsSelector() 
 	{
@@ -40,10 +46,13 @@ public:
 	~ItemsSelector() {}
 	ItemsSelector(Vec2f& screenSize,float height);
 	void Draw(class Graphics& gfx);
+	void Draw(class Graphics& gfx,class Camera& cam);
 	bool OnMouseClick(const Vec2i& mouse,bool isControlKey);
 	bool BaseItemSelected();
 	void BaseItemSelected(bool val);
+	void SetBaseIntoWorld(RectF pos);
 	Base* CurrentSelectedBase();
+	void Update(const float& dt);
 	
 private:
 	RectF border;
@@ -53,5 +62,13 @@ private:
 	Table<Base> m_bases;
 	Base* m_selectedBase = nullptr;
 	Table<Item> m_items;
+	BasePlace m_basePlaces[4];
+	int m_numBasesInWorld = 0;
+	std::wstring m_creditString;
+	std::wstring m_unitString;
+	std::wstring m_baseString;
+
+	std::unordered_map<std::string, TextSprite> m_text;
+	
 	
 };
