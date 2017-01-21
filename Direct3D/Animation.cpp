@@ -31,6 +31,12 @@ void Animation::SetPosition(Vec2f & pos)
 	m_center.y = pos.y + (m_drawHeight * 0.5f);
 }
 
+bool Animation::PointIn(Vec2f & pt)
+{
+	
+	return RectF(m_renderDesc.drawRect).Contains(pt);
+}
+
 
 
 

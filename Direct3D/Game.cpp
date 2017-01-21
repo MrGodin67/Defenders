@@ -65,19 +65,19 @@ HRESULT Game::ConstructScene(const float& deltaTime)
 		if (e_mouse.GetType() == Mouse::Event::LPress)
 		{
 
-			int result = m_menus["main"]->OnMouseClick(Vec2i(m_mousePt));
-			if (result != -1)
+			_MenuReturn result = m_menus["main"]->OnMouseClick(Vec2i(m_mousePt));
+			if (result != Invalid)
 			{
 				switch (result)
 				{
-				case 0:
+				case newGame:
 					m_gameState = _GameState::start;
 				break;
-				case 1:
+				case resumeGame:
 					m_gameState = _GameState::running;
 					m_menus["main"]->GameStarted(true);
 					break;
-				case 2:
+				case exitGame:
 					EndApp();
 					break;
 
@@ -92,19 +92,19 @@ HRESULT Game::ConstructScene(const float& deltaTime)
 		if (e_mouse.GetType() == Mouse::Event::LPress)
 		{
 			
-			int result = m_menus["start"]->OnMouseClick(Vec2i(m_mousePt));
-			if (result != -1)
+			_MenuReturn  result = m_menus["start"]->OnMouseClick(Vec2i(m_mousePt));
+			if (result != Invalid)
 			{
 				switch (result)
 				{
-				case 0:
+				case resumeGame:
 					m_gameState = _GameState::running;
 					m_menus["main"]->GameStarted(true);
 					break;
-				case 1:
+				case backGame:
 					m_gameState = _GameState::paused;
 					break;
-				case 2:
+				case exitGame:
 					EndApp();
 					break;
 
@@ -125,11 +125,11 @@ HRESULT Game::RenderScene()
 	switch (m_gameState)
 	{
 	case _GameState::running:
-		m_grid.Draw(gfx, m_cam.GetViewFrame(),m_itemSelector->CurrentSelectedBase());
+		m_grid.Draw(gfx, m_cam.GetViewFrame(),nullptr);
 	
 		m_unitManager->Draw(gfx);
 		// draw last
-		m_itemSelector->Draw(gfx,m_cam);
+		m_itemSelector->Draw(gfx);
 		
 		
 		break;

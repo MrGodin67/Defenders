@@ -28,7 +28,7 @@ class Game
 	Camera m_cam;
 	WorldGrid m_grid;
 	InputManager& m_input;
-	ItemsSelector::Item selected_Base = ItemsSelector::Item();
+	
 	std::unique_ptr<BaseManager> m_baseManager;
 	std::unique_ptr<SoundManager> m_soundFX;
 	std::unique_ptr<MainMenu> m_MainMenu;

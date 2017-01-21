@@ -63,18 +63,18 @@ StartMenu::StartMenu(Vec2f screenCenter, float width, float height)
 	for (int c = 0; c < numButtons -2; c++)
 	{
 		Buttons[c].frame = RectF(x, y, x + w, y + h);
-		Buttons[c].id = 0;
+		Buttons[c].id = Invalid;
 		Buttons[c].text = text[c];
 		y += inc;
 		
 	}
 	y += inc ;
 	Buttons[numButtons - 2].frame = RectF(x, y, x + w, y + h);
-	Buttons[numButtons - 2].id = 1;
+	Buttons[numButtons - 2].id = resumeGame;
 	Buttons[numButtons - 2].text = L"New Game";
 	y += inc*4;
 	Buttons[numButtons - 1].frame = RectF(x, y, x + w, y + h);
-	Buttons[numButtons - 1].id = 1;
+	Buttons[numButtons - 1].id = backGame;
 	Buttons[numButtons - 1].text = L"Back";
 	
 	TechRects[0].clip = Locator::ImageManager->GetClip("player_units", 5);
@@ -153,24 +153,25 @@ void StartMenu::Draw(Graphics & gfx)
 	
 }
 
-int StartMenu::OnMouseClick(Vec2i& mouse)
+_MenuReturn StartMenu::OnMouseClick(Vec2i& mouse)
 {
 	for (int c = 0; c < numButtons; c++)
 	{
 
 		if (Buttons[c].frame.Contains(mouse))
 		{
-			Locator::SoundEngine->Play("select", 0.75f);
 			
-			return Buttons[c].id;
+			Locator::SoundEngine->Play("select", 0.75f);
+			if(Buttons[c].id != Invalid)
+			  return Buttons[c].id;
 		}
 
 	}
 
-	return -1;
+	return Invalid;
 }
 
-int StartMenu::OnMouseOver(Vec2i & mouse)
+_MenuReturn StartMenu::OnMouseOver(Vec2i & mouse)
 {
 	
 	Buttons[0].drawFrame = Buttons[1].drawFrame = Buttons[2].drawFrame = 
@@ -184,12 +185,12 @@ int StartMenu::OnMouseOver(Vec2i & mouse)
 				Locator::SoundEngine->Play("tick", 0.25f);
 			Buttons[c].drawFrame = true;
 			lastOver = c;
-			return 0;
+			return Invalid;
 		}
 
 	}
 	lastOver = -1;
-	return 0;
+	return Invalid;
 }
 
 void StartMenu::DrawMap(Graphics & gfx)

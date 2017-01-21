@@ -1,43 +1,66 @@
 #pragma once
 
 #include "includes.h"
-#include "SpriteSheet.h"
 #include "Sprite2.h"
-#include "Table.h"
-#include "Bases.h"
-#include "Animation.h"
+#include "Graphics.h"
+#include "bases.h"
 class ItemsSelector
 {
-	int m_credits = 1000;
-public:
-	struct BasePlace
+	// Items
+	struct BaseItem
 	{
-		RectF pos;
-		Base* owner;
-		int imageIndex;
-	};
-	struct Item
-	{
-	
-		int type = 0;
-		int imageIndex = -1;
-		RectF frame;
-		RectF progressBar;
-		float buildTime;
-		float timer;
-		int  selectIndex;
+		Base* base = nullptr;
+		Animation image;
 		bool selected = false;
-		bool active = false;
-		bool built;
-		int  cost;
-		bool sell;
-		int  sellValue;
-		int  numberAvaliable;
+		size_t numItems;
 		
-		Item() {};
-	
-
+		std::vector<Animation> children;
+		BaseItem(Animation::RenderDesc& desc, std::vector<int> itemIndices)
+			:
+			image(desc),
+			numItems(itemIndices.size()),
+			selected(false)
+		{
+			
+			float x = desc.drawRect.left;
+			float y = desc.drawRect.bottom + 4.0f;
+			float w = 32.0f;
+			for (int i = 0; i< numItems; i++)
+			{
+				TextureManager::ImageClip clip = Locator::ImageManager->GetClip("player_units", itemIndices[i]);
+				Animation::RenderDesc desc;
+				desc.clipRect = clip.rect.ToD2D();
+				desc.drawRect = { x,y,x + w,y + w };
+				desc.image = clip.bitmap;
+				x += (w + 6.0f);
+				children.emplace_back(desc);
+			}
+		}
+		void Draw(Graphics& gfx)
+		{
+			
+			if (selected)
+			{
+				gfx.DrawFilledScreenRectangle(image.GetRenderDesc().drawRect, D2D1::ColorF(0.0f, 1.0f, 0.4f, 0.4f));
+				gfx.DrawRectangle(D2D1::Matrix3x2F::Identity(), image.GetRenderDesc().drawRect, D2D1::ColorF(1.0f, 1.0f, 1.0f, 1.0f));
+				gfx.Rasterize(image.GetDrawable());
+				for (size_t i = 0; i < numItems; i++)
+				{
+					gfx.DrawFilledScreenRectangle(children[i].GetRenderDesc().drawRect, D2D1::ColorF(0.0f, 1.0f, 0.4f, 0.4f));
+					gfx.Rasterize(children[i].GetDrawable());
+					gfx.DrawRectangle(D2D1::Matrix3x2F::Identity(), children[i].GetRenderDesc().drawRect, D2D1::ColorF(1.0f, 1.0f, 1.0f, 1.0f));
+				}
+			}else
+				gfx.Rasterize(image.GetDrawable());
+		};
 	};
+	int m_credits = 1000;
+	std::vector<BaseItem> m_bases;
+	
+	Animation m_hud;
+public:
+	
+	
 	
 public:
 	ItemsSelector() 
@@ -46,12 +69,11 @@ public:
 	~ItemsSelector() {}
 	ItemsSelector(Vec2f& screenSize,float height);
 	void Draw(class Graphics& gfx);
-	void Draw(class Graphics& gfx,class Camera& cam);
 	bool OnMouseClick(const Vec2i& mouse,bool isControlKey);
 	bool BaseItemSelected();
 	void BaseItemSelected(bool val);
 	void SetBaseIntoWorld(RectF pos);
-	Base* CurrentSelectedBase();
+	//Base* CurrentSelectedBase();
 	void Update(const float& dt);
 	
 private:
@@ -59,10 +81,7 @@ private:
 	bool PointIn(const int& x, const int& y);
 	void DrawItems(class Graphics& gfx);
 	bool baseItemSelected = false;
-	Table<Base> m_bases;
-	Base* m_selectedBase = nullptr;
-	Table<Item> m_items;
-	BasePlace m_basePlaces[4];
+	
 	int m_numBasesInWorld = 0;
 	std::wstring m_creditString;
 	std::wstring m_unitString;

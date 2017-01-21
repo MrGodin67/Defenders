@@ -19,7 +19,7 @@ protected:
 	D2D1_COLOR_F color;
 	D2D1_COLOR_F backcolor;
 	RectF pos;
-	WCHAR text[256];
+	WCHAR text[512];
 	bool drawBackground;
 	IDWriteTextFormat* pFormat;
 public:
@@ -28,7 +28,7 @@ public:
 		:pFormat(format), pos(pos), color(color), backcolor(backColor), drawBackground(drawBack)
 	{
 		wsprintf(this->text, L"%s", text.c_str());
-		//this->text[] = const_cast<WCHAR*>(text.c_str());
+	
 	}
 	virtual ~TextSprite() {}
 	virtual void UpdateText(std::wstring str);

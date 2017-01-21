@@ -103,7 +103,6 @@ void LifeRect::SetPosition(Vec2f & pos)
 	m_center.y = pos.y + (m_drawHeight * 0.5f);
 	
 	float inc = m_width / 3.0f;
-	
 	inc = inc * 0.5f;
 	m_linePt[0].x = m_Desc.drawRect.left + inc;
 	m_linePt[0].y = m_Desc.drawRect.top - 1.0f;

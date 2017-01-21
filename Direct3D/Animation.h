@@ -40,10 +40,10 @@ public:
     Animation(RenderDesc& desc);
 	virtual ~Animation() {}
 	RenderDesc GetRenderDesc() { return m_renderDesc; }
-	void SetScaling(Vec2f& scale);
-	void SetRotation(float& angle);
+	virtual void SetScaling(Vec2f& scale);
+	virtual void SetRotation(float& angle);
 	virtual void SetPosition(Vec2f& pos);
-	
+	virtual bool PointIn(Vec2f& pt);
 public:
 	class Drawable : public ::Drawable
 	{

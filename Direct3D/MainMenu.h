@@ -17,8 +17,8 @@ public:
 	MainMenu(Vec2f screenCenter,float width,float height);
 	~MainMenu();
 	virtual void Draw(class Graphics& gfx)override;
-	virtual int OnMouseClick(Vec2i& mouse)override;
-	virtual int OnMouseOver(Vec2i& mouse)override;
+	virtual _MenuReturn OnMouseClick(Vec2i& mouse)override;
+	virtual _MenuReturn OnMouseOver(Vec2i& mouse)override;
 	
 };
 

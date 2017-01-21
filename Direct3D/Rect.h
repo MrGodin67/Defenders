@@ -42,11 +42,18 @@ public:
 	{}
 	inline	Rect(_Vec2<T> p0, _Vec2<T> p1)
 		:
-		Rect(min(p0.y, p1.y),
-			max(p0.y, p1.y),
-			min(p0.x, p1.x),
-			max(p0.x, p1.x))
+		Rect(min(p0.x, p1.x),
+			min(p0.y, p1.y),
+			max(p0.x, p1.x),
+			max(p0.y, p1.y))
 	{}
+	inline Rect(D2D1_RECT_F& rct)
+	{
+		(float)left = rct.left;
+		(float)top = rct.top;
+		(float)right = rct.right;
+		(float)bottom = rct.bottom;
+	}
 	inline	void Translate(_Vec2< T > d)
 	{
 		Translate(d.x, d.y);

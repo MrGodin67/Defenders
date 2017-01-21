@@ -1,6 +1,17 @@
 #pragma once
 #include "includes.h"
 #include "vec2.h"
+
+enum _MenuReturn
+{
+	startGame,
+	resumeGame,
+	newGame,
+	exitGame,
+	backGame,
+	pausedGame,
+	Invalid
+};
 class MenuInterface
 {
 protected:
@@ -9,7 +20,7 @@ public:
 	struct Button
 	{
 		RectF frame;
-		int id;
+		_MenuReturn id;
 		bool drawFrame;
 		bool enabled = true;
 		WCHAR* text;
@@ -17,8 +28,8 @@ public:
 	MenuInterface() {};
 	virtual ~MenuInterface() {}
 	virtual void Draw(class Graphics& gfx) = 0;
-	virtual int OnMouseClick(Vec2i& mouse) = 0;
-	virtual int OnMouseOver(Vec2i& mouse) = 0;
+	virtual _MenuReturn OnMouseClick(Vec2i& mouse) = 0;
+	virtual _MenuReturn OnMouseOver(Vec2i& mouse) = 0;
 
 	bool GameStarted() { return gameStarted; }
 	void GameStarted(bool val) { gameStarted = val; }

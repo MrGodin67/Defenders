@@ -75,7 +75,7 @@ void UnitManager::AddPlayerUnit(_EntityType type, Vec2i pos)
 	{
 	case drone:
 		
-		indices.push_back(1);
+		
 		indices.push_back(0);
 		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid,rDesc, indices,0.25f,"player_units", speeds[3], drone));
 		

@@ -53,6 +53,7 @@ void Sprite::UpdateAngle(int index, float & angle)
 
 void TextSprite::UpdateText(std::wstring str)
 {
+	
 	wsprintf(this->text, L"%s", str.c_str());
 }
 

@@ -22,11 +22,14 @@ MainMenu::MainMenu(Vec2f screenCenter, float width, float height)
 	for (int c = 0; c < numButtons; c++)
 	{
 		Buttons[c].frame = RectF(x, y, x + w, y + h);
-		Buttons[c].id = c;
 		Buttons[c].text = text[c];
 		y += inc;
 
 	}
+	Buttons[0].id = newGame;
+	Buttons[1].id = resumeGame;
+	Buttons[2].id = exitGame;
+
 	
 }
 
@@ -62,7 +65,7 @@ void MainMenu::Draw(Graphics & gfx)
 	}
 }
 
-int MainMenu::OnMouseClick(Vec2i& mouse)
+_MenuReturn MainMenu::OnMouseClick(Vec2i& mouse)
 {
 	for (int c = 0; c < numButtons; c++)
 	{
@@ -77,10 +80,10 @@ int MainMenu::OnMouseClick(Vec2i& mouse)
 		
 	}
 
-	return -1;
+	return Invalid;
 }
 
-int MainMenu::OnMouseOver(Vec2i & mouse)
+_MenuReturn MainMenu::OnMouseOver(Vec2i & mouse)
 {
 	
 	Buttons[0].drawFrame = Buttons[1].drawFrame = Buttons[2].drawFrame = false;
@@ -94,11 +97,11 @@ int MainMenu::OnMouseOver(Vec2i & mouse)
 					Locator::SoundEngine->Play("tick", 0.25f);
 				Buttons[c].drawFrame = true;
 				lastOver = c;
-				return 0;
+				return Invalid;
 			}
 		}
 		
 	}
 	lastOver = -1;
-	return 0;
+	return Invalid;
 }

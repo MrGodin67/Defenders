@@ -123,9 +123,6 @@
     <ClCompile Include="DXErr.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="ItemSelector.cpp">
-      <Filter>Objects\UI</Filter>
-    </ClCompile>
     <ClCompile Include="Bases.cpp">
       <Filter>Objects\Bases</Filter>
     </ClCompile>
@@ -158,6 +155,9 @@
     </ClCompile>
     <ClCompile Include="StatusRect.cpp">
       <Filter>Objects\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemSelector.cpp">
+      <Filter>Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -233,9 +233,6 @@
     <ClInclude Include="Camera.h">
       <Filter>Objects\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="ItemSelector.h">
-      <Filter>Objects\UI</Filter>
-    </ClInclude>
     <ClInclude Include="MainMenu.h">
       <Filter>Objects\UI\Main Menu</Filter>
     </ClInclude>
@@ -304,6 +301,12 @@
     </ClInclude>
     <ClInclude Include="StatusRect.h">
       <Filter>Objects\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Transport.h">
+      <Filter>Objects\Game Pieces</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemSelector.h">
+      <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
