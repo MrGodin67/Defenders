@@ -8,6 +8,16 @@
 WorldGrid::WorldGrid(Camera& cam)
 	:m_cam(cam)
 {
+	
+	StatusRect::StatusRectDesc desc;
+	desc.drawRect = { 0.0f,0.0f,64.0f,64.0f };
+	desc.color = { 0.0f,1.0f,0.0f,1.0f };
+	desc.alphaBlend = 0.8f;
+	desc.drawFilled = true;
+	for (int c = 0; c < 4; c++)
+	{
+		m_basePlacementTiles.emplace_back(desc);
+	}
 }
 
 WorldGrid::~WorldGrid()
@@ -149,7 +159,7 @@ void WorldGrid::Draw(Graphics & gfx, RectF& viewport,Base* selectedBase )
 		return;
 	D2D1_COLOR_F color;
 	
-	if (selectedBase)
+	/*if (selectedBase)
 	{
 		RectF rect = m_basePlacementTiles[0]->GetRect();
 		rect.right = rect.left + 128.0f;
@@ -158,11 +168,11 @@ void WorldGrid::Draw(Graphics & gfx, RectF& viewport,Base* selectedBase )
 			rect.ToD2D(),
 			Locator::ImageManager->GetImage("bases")->GetTexture(),
 			&Locator::ImageManager->GetImage("bases")->GetClippedImage(0).ToD2D());
-	}
+	}*/
 	for (int d = 0; d < m_basePlacementTiles.size(); d++)
 	{
-		m_basePlacementTiles[d]->Passable() ? color = { 0.0f,1.0f,0.0f,0.25f } : color = { 1.0f,0.0f,0.0f,0.25f };
-		gfx.DrawFilledScreenRectangle(m_basePlacementTiles[d]->GetRect().ToD2D(), color);
+		m_cam.Rasterize(m_basePlacementTiles[d].GetDrawable());
+		
 	}
 	
 
@@ -194,20 +204,30 @@ Vec2i WorldGrid::GetCellIndex(Vec2f& worldPoint)
 void WorldGrid::SetBasePlacementTiles(const Vec2i & mousePos)
 {
 	Vec2f mp = Vec2f(mousePos);
-	mp +=  m_cam.GetPos();
+	Vec2f h = m_cam.GetPos();
 	//if (m_cam.PointInViewFrame(Vec2f(mousePos), Vec2f(0.0f, 0.0f)))
 	//{
-
+	
 		int row = (int)mp.y / m_cellHeight;
 		int col = (int)mp.x / m_cellWidth;
-		m_basePlacementTiles.clear();
-		for (int r = row; r < row + 2; r++)
+		int index = 0;
+		for (int r = row,rr=0; r < row + 2; rr++,r++)
 		{
-			for (int c = col; c < col + 2; c++)
+			for (int c = col,cc=0; c < col + 2; cc++,c++)
 			{
-				if(m_cells(r, c).Passable())
-					m_basePlacementTiles.push_back(&m_cells(r, c));
-					
+				index = rr * 2 + cc;
+				m_basePlacementTiles[index].SetPosition(Vec2f((float)(c *m_cellWidth), (float)(r *m_cellHeight)));
+				if (m_cells(r, c).Passable())
+				{
+					m_basePlacementTiles[index].SetColor({ 0.0f,1.0f,0.0f,0.5f });
+					m_basePlacementTiles[index].Active(true);
+				}
+				else
+				{
+					m_basePlacementTiles[index].SetColor({ 1.0f,0.0f,0.0f,0.5f });
+					m_basePlacementTiles[index].Active(false);
+				}
+				
 				
 			}
 		}
@@ -221,10 +241,10 @@ void WorldGrid::FlushPlacementTiles()
 
 bool WorldGrid::SetBase(Vec2i pos, Tile& start_tile, std::vector<Tile*>& exitsPt)
 {
-	if (!m_basePlacementTiles[0]->Passable() || 
-		!m_basePlacementTiles[1]->Passable() || 
-		!m_basePlacementTiles[2]->Passable() || 
-		!m_basePlacementTiles[3]->Passable() )
+	if (!m_basePlacementTiles[0].Active() || 
+		!m_basePlacementTiles[1].Active() || 
+		!m_basePlacementTiles[2].Active() ||
+		!m_basePlacementTiles[3].Active())
 		return false;
 
 	// get surrounding passable tiles for each placement
@@ -232,16 +252,14 @@ bool WorldGrid::SetBase(Vec2i pos, Tile& start_tile, std::vector<Tile*>& exitsPt
 	int inc[3] = { -1,0,1 };
 	for (int i = 0; i < 4; i++)
 	{
-		Vec2f pos2 = m_basePlacementTiles[i]->GetWorldPosition();
+		Vec2f pos2 = m_basePlacementTiles[i].GetPosition();
 		int cc = (int)pos2.x / m_cellWidth;
 		int rr = (int)pos2.y / m_cellHeight;
 		for (int r = 0; r < 3; r++)
 		{
 			for (int c = 0; c < 3; c++)
 			{
-				auto basePlace = std::find(m_basePlacementTiles.begin(), m_basePlacementTiles.end(), &m_cells(rr + inc[r], cc + inc[c]));
-				if (basePlace != m_basePlacementTiles.end())
-					continue;
+				
 
 				auto it = std::find(exitsPt.begin(), exitsPt.end(), &m_cells(rr + inc[r], cc + inc[c]));
 				if (it != exitsPt.end() )
@@ -277,7 +295,7 @@ bool WorldGrid::SetBase(Vec2i pos, Tile& start_tile, std::vector<Tile*>& exitsPt
 	}
 
 	
-	m_basePlacementTiles.clear();
+	//m_basePlacementTiles.clear();
 	return true;
 }
 

@@ -13,6 +13,7 @@ public:
 		D2D1_RECT_F drawRect;
 		D2D1_COLOR_F color;
 		float alphaBlend = 1.0f;
+		bool drawFilled = false;
 		StatusRectDesc() {}
 		StatusRectDesc(D2D1_RECT_F& drawrect,  float transparency,D2D1_COLOR_F color)
 			:
@@ -27,6 +28,7 @@ protected:
 	Vec2f m_scale = { 1.0f,1.0f };
 	float m_drawWidth, m_drawHeight;
 	float m_rotAngle = 0.0f;
+	bool m_active = false;
 
 public:
 	StatusRect() {}
@@ -36,7 +38,10 @@ public:
 	void SetScaling(Vec2f& scale);
 	void SetRotation(float& angle);
 	virtual void SetPosition(Vec2f& pos);
-
+	void SetColor(D2D1_COLOR_F color);
+	Vec2f GetPosition() { return Vec2f(m_Desc.drawRect.left, m_Desc.drawRect.top); }
+	bool Active() {	return m_active;}
+	void Active(bool val) { m_active = val; }
 public:
 	class Drawable : public ::Drawable
 	{

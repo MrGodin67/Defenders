@@ -32,6 +32,11 @@ void StatusRect::SetPosition(Vec2f & pos)
 	m_center.y = pos.y + (m_drawHeight * 0.5f);
 }
 
+void StatusRect::SetColor(D2D1_COLOR_F color)
+{
+	m_Desc.color = color;
+}
+
 StatusRect::Drawable::Drawable(StatusRect& p)
 	:
 	m_parent(p)
@@ -55,7 +60,10 @@ void StatusRect::Drawable::Rasterize(Graphics& gfx)
 	Transform(D2D1::Matrix3x2F::Scale(
 	{ m_parent.m_scale.x, m_parent.m_scale.y },
 	{ m_parent.m_center.x,m_parent.m_center.y }));
-	gfx.DrawRectangle(matTrans, m_parent.m_Desc.drawRect, m_parent.m_Desc.color);
+	if(m_parent.m_Desc.drawFilled)
+		gfx.DrawFilledScreenRectangle( m_parent.m_Desc.drawRect, m_parent.m_Desc.color);
+	else
+		gfx.DrawRectangle(matTrans, m_parent.m_Desc.drawRect, m_parent.m_Desc.color);
 
 
 }

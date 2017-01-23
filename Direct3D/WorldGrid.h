@@ -7,11 +7,12 @@
 #include "Camera.h"
 #include <array>
 #include "Bases.h"
+#include "StatusRect.h"
 
 class WorldGrid
 {
 	Table<Tile> m_cells;
-	std::vector<Tile*> m_basePlacementTiles;
+	std::vector<StatusRect> m_basePlacementTiles;
 	float m_width, m_height;
 	int m_rows, m_columns,m_cellWidth,m_cellHeight;
 	std::unique_ptr<SpriteSheet> sprite;

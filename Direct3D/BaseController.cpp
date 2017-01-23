@@ -126,7 +126,8 @@ void BaseController::Update(const float & dt, UnitManager* unitMgr)
 	HandleInput();
 	if (m_newBaseCreation)
 	{
-		m_grid.SetBasePlacementTiles(m_input.MousePosition());
+		Vec2f pos(m_input.MousePosition());
+		m_grid.SetBasePlacementTiles(m_cam.ConvertToWorldSpace(pos));
 	}
 	for (size_t i = 0; i < 4; i++)
 	{
