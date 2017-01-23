@@ -22,7 +22,7 @@ void Sprite::Update(const float & dt)
 void Sprite::UpdatePosition(Vec2f velocity)
 {
 	m_position += velocity;
-	m_renderDesc.drawRect = RectF(m_extents.GetRect(m_position)).ToD2D();
+	m_renderDesc.drawRect = m_extents.GetRect(m_position).ToD2D();
 	m_center = Vec2f(m_renderDesc.drawRect.left + m_extents.GetMax().x, m_renderDesc.drawRect.top + m_extents.GetMax().y);
 }
 

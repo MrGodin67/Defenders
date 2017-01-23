@@ -40,9 +40,10 @@ bool MoveableObject::CheckWaypointArrival(const float& dt)
 }
 
 MoveableObject::MoveableObject(WorldGrid& grid, Animation::RenderDesc & desc, std::vector<int> indices, float interval, std::string imageName, float Speed, _EntityType type)
-	:Sprite(desc, indices, interval, imageName, type),
+	:Sprite(desc, indices, interval, imageName),
 	m_grid(grid),
-	m_speed(Speed)
+	m_speed(Speed),
+	m_type(type)
 {
 	m_wayPoints.push_back(m_position);
 	m_wayPointIndex = 1;

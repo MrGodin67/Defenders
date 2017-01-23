@@ -12,13 +12,14 @@ protected:
 	std::vector<Vec2f> m_wayPoints;
 	int m_wayPointIndex = 1;
 	bool m_pathFinished = true;
-	
+	_EntityType m_type;
 private:
 	bool CheckWaypointArrival(const float& dt);
 public:
 	MoveableObject(WorldGrid& grid, Animation::RenderDesc& desc, std::vector<int> indices, float interval,
 		std::string imageName, float Speed, _EntityType type);
 	
+	_EntityType Type() { return m_type; }
 	virtual void Update(const float& dt)override;
 	virtual void SetSpeed(float& s);
 	virtual void SetWaypoints(std::vector<Vec2f>& wp);

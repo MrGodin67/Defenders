@@ -63,6 +63,7 @@ protected:
 	float m_lineWidth = 1.0f;
 	D2D1_POINT_2F m_linePt[2];
 public:
+	LifeRect() {}
 	LifeRect(StatusRectDesc& desc,float maxValue,float lineWidth, D2D1_COLOR_F meterColor = D2D1::ColorF(0.0f,1.0f,0.0f,1.0f))
 	:
 	StatusRect(desc),
@@ -79,6 +80,7 @@ public:
 		m_linePt[1] = m_linePt[0];
 	}
 	void UpdateHealth(float& health);
+	void SetMaxValue(float val) { m_maxValue = val; }
 	virtual void SetPosition(Vec2f& pos)override;
 	class Drawable : public ::Drawable
 	{

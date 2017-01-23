@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <cmath>
 
-void UnitManager::HandleInput( Mouse::Event& mouse, Keyboard::Event& kbd)
+void UnitManager::HandleInput( Mouse::Event& mouse)
 {
 	if (mouse.GetType() == Mouse::Event::LPress)
 	{
@@ -65,6 +65,7 @@ UnitManager::UnitManager(InputManager& input, WorldGrid& world, Camera & cam, st
 void UnitManager::AddPlayerUnit(_EntityType type, Vec2i pos)
 {
 	Animation::RenderDesc rDesc;
+	
 	rDesc.drawRect.left = pos.x * 64.0f;
 	rDesc.drawRect.top = pos.y * 64.0f;
 	rDesc.drawRect.right = rDesc.drawRect.left + 48.0f;
@@ -121,12 +122,12 @@ void UnitManager::SelectUnit(Vec2f world)
 
 }
 
-void UnitManager::Update(const float & dt, Mouse::Event& mouse, Keyboard::Event& kbd)
+void UnitManager::Update(const float & dt, Mouse::Event& mouse)
 {
 	static float health = 0.5f;
 	m_life[0].UpdateHealth(health);
 	health += 0.15f;
-	HandleInput(mouse,kbd);
+	HandleInput(mouse);
 	
 	for (size_t index = 0; index < m_playerEntites.size(); index++)
 	{

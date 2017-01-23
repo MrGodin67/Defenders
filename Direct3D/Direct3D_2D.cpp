@@ -1,6 +1,6 @@
 #include "Direct3D_2D.h"
 
-
+#include "Direct3DWindow.h"
 XMMATRIX Direct3D::m_projectionMatrix = XMMatrixIdentity();
 XMMATRIX Direct3D::m_viewMatrix = XMMatrixIdentity();
 
@@ -14,8 +14,8 @@ HRESULT Direct3D::InvokeScreenAdapter()
 	DXGI_MODE_DESC* displayModeList;
 	DXGI_ADAPTER_DESC adapterDesc;
 
-
-
+	
+	
 	HRESULT result = S_OK;
 	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
 	if (FAILED(result))

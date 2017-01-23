@@ -32,7 +32,7 @@ public:
 	Vec2i GetCellIndex(Vec2f& worldPoint);
 	void SetBasePlacementTiles(const Vec2i& mousePos);
 	void FlushPlacementTiles();
-	bool SetBase( Vec2i pos,Tile& start_tile);
+	bool SetBase( Vec2i pos,Tile& start_tile,std::vector<Tile*>& exitsPt);
 	void SetVisibility(Vec2i pos);
 	Tile* GetTile(Vec2f pos);
 	void SetMapPassable(Vec2f pos,bool passable);

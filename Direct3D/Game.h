@@ -5,18 +5,20 @@
 #include "WorldGrid.h"
 #include "Camera.h"
 #include "MoveableObject.h"
-#include "SpriteSheet.h"
+
 #include "MainMenu.h"
 #include "StartMenu.h"
 #include "SoundEffect.h"
-#include "ItemSelector.h"
+
 #include "SoundManager.h"
-#include "BaseManager.h"
+
 #include "GameState.h"
 #include "EntityManager.h"
 #include "FileWriter.h"
 #include "TextureManager.h"
 #include "VecRect.h"
+
+#include "BaseController.h"
 
 class Game
 {
@@ -29,16 +31,11 @@ class Game
 	WorldGrid m_grid;
 	InputManager& m_input;
 	
-	std::unique_ptr<BaseManager> m_baseManager;
 	std::unique_ptr<SoundManager> m_soundFX;
 	std::unique_ptr<MainMenu> m_MainMenu;
-	std::unique_ptr<SpriteSheet> m_gameMapPieces;
-	std::unique_ptr<SpriteSheet> m_gamePieces;
-	std::unique_ptr<SpriteSheet> m_gameBases;
-	std::unique_ptr<ItemsSelector> m_itemSelector;
 	std::unique_ptr<UnitManager> m_unitManager;
 	std::unique_ptr<TextureManager> m_textureManager;
-	
+	std::unique_ptr<BaseController> m_controller;
 	FileHandler testFile;
 	Extents<float> pos;
 	std::unordered_map<std::string, std::unique_ptr<MenuInterface>> m_menus;
@@ -47,7 +44,7 @@ private:
 	void LoadSounds();
 	void Move();
 	void LoadUnits();
-	void HandleUserEvents(Mouse::Event mouse, Keyboard::Event kbd);
+	void HandleUserEvents(Mouse::Event mouse);
 public:
 	Game(class Direct3DWindow& wnd);
 	bool Play(const float& deltaTime);

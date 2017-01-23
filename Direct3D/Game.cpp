@@ -24,10 +24,7 @@ Game::Game(Direct3DWindow & wnd)
 	m_menus["main"] = std::make_unique<MainMenu>(Vec2f((float)window.ScreenWidth() / 2, (float)window.ScreenHeight() / 2), 800.0f, 600.0f);
 	m_menus["start"] = std::make_unique<StartMenu>(Vec2f((float)window.ScreenWidth() / 2, (float)window.ScreenHeight() / 2), 800.0f, 600.0f);
 
-	testFile.WriteFile();
-	testFile.ReadFile();
-	
-	int q = 0;
+	m_controller = std::make_unique<BaseController>(m_grid,m_input,m_cam,Vec2f((float)window.ScreenWidth(), (float)window.ScreenHeight()),128.0f);
 }
 
 bool Game::Play(const float& deltaTime)
@@ -43,7 +40,8 @@ HRESULT Game::ConstructScene(const float& deltaTime)
 {
 	
 	Mouse::Event e_mouse = m_input.GetMouseEvent();
-	Keyboard::Event e_kbd = m_input.GetKeyboardEvent();
+	
+	
 	if(e_mouse.IsValid())
 	   m_mousePt = Vec2i(e_mouse.GetPosX(), e_mouse.GetPosY());
 	
@@ -51,13 +49,11 @@ HRESULT Game::ConstructScene(const float& deltaTime)
 	{
 	case _GameState::running:
 	{		
-		HandleUserEvents(e_mouse, e_kbd);
-		if(m_itemSelector->BaseItemSelected())
-			m_grid.SetBasePlacementTiles(m_mousePt);
-
-		m_unitManager->Update(deltaTime, e_mouse,e_kbd);
 		
-		m_itemSelector->Update(deltaTime);
+		HandleUserEvents(e_mouse);
+		m_controller->Update(deltaTime, m_unitManager.get());
+		m_unitManager->Update(deltaTime, e_mouse);
+		
 	}
 		break;
 	case _GameState::paused:
@@ -129,8 +125,7 @@ HRESULT Game::RenderScene()
 	
 		m_unitManager->Draw(gfx);
 		// draw last
-		m_itemSelector->Draw(gfx);
-		
+		m_controller->Draw(gfx);
 		
 		break;
 	case _GameState::paused:
@@ -171,12 +166,6 @@ bool Game::LoadImages()
 	m_textureManager->LoadImages(data);
 
 	Locator::SetImageManager(m_textureManager.get());
-	m_baseManager = std::make_unique<BaseManager>();
-	m_gameMapPieces = std::make_unique<SpriteSheet>(L"media\\map_pieces.png", 64.0f, 64.0f);
-	m_gamePieces = std::make_unique<SpriteSheet>(L"media\\test.png", 32.0f, 32.0f);
-	m_itemSelector = std::make_unique<ItemsSelector>(Vec2f((float)window.ScreenWidth(), (float)window.ScreenHeight()), 128.0f);
-	
-	
 	return true;
 }
 void Game::EndApp()
@@ -200,6 +189,8 @@ void Game::LoadSounds()
 	m_soundFX->AddSound("newunitsavailable", L"media\\newunit.wav");
 	m_soundFX->AddSound("tick", L"media\\tick.wav");
 	m_soundFX->AddSound("select", L"media\\select.wav");
+	m_soundFX->AddSound("unitrequest", L"media\\requestunitgeneration.wav");
+	m_soundFX->AddSound("nounits", L"media\\nonewunits.wav");
 	Locator::SetSoundManager(m_soundFX.get());
 
 }
@@ -212,9 +203,9 @@ void Game::Move()
 void Game::LoadUnits()
 {
 	m_unitManager = std::make_unique<UnitManager>(m_input,m_grid,m_cam,L"media\\playerUnits.png");
-	for (int r = 4; r < 8; r++)
+	for (int r = 4; r < 6; r++)
 	{
-		for (int c = 4; c < 8; c++)
+		for (int c = 4; c < 5; c++)
 		{
 			if( c == 4)
 			  m_unitManager->AddPlayerUnit(drone, Vec2i(r, c));
@@ -231,7 +222,7 @@ void Game::LoadUnits()
 	
 }
 
-void Game::HandleUserEvents(Mouse::Event mouse, Keyboard::Event kbd)
+void Game::HandleUserEvents(Mouse::Event mouse)
 {
 	if (m_input.AnyKeyPressed())
 	{
@@ -255,31 +246,6 @@ void Game::HandleUserEvents(Mouse::Event mouse, Keyboard::Event kbd)
 		m_cam.Scroll(scroll);
 	}
 	
-	if (mouse.GetType() == Mouse::Event::RPress)
-	{
-		m_itemSelector->BaseItemSelected(false);
-		m_grid.FlushPlacementTiles();
-	}
-	if (mouse.GetType() == Mouse::Event::LPress)
-	{
-		if (m_input.KeyPress(VK_SHIFT))
-		{
-			m_baseManager->OnMouseClick(m_mousePt);
-		}
-		if (m_itemSelector->BaseItemSelected())
-		{
-			Tile tile;
-			if (m_grid.SetBase(Vec2i(m_cam.ConvertToWorldSpace(m_mousePt)), tile))
-			{
-				m_itemSelector->SetBaseIntoWorld(tile.GetRect());
-				m_itemSelector->BaseItemSelected(false);
-				m_soundFX->Play("constructionstarted");
-			}
-
-
-		}else
-			m_itemSelector->OnMouseClick(m_mousePt, m_input.KeyPress(VK_CONTROL));
-		
-	}
+	
 	
 }

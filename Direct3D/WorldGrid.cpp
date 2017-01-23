@@ -157,7 +157,7 @@ void WorldGrid::Draw(Graphics & gfx, RectF& viewport,Base* selectedBase )
 		gfx.DrawSprite(D2D1::Matrix3x2F::Identity(),
 			rect.ToD2D(),
 			Locator::ImageManager->GetImage("bases")->GetTexture(),
-			&Locator::ImageManager->GetImage("bases")->GetClippedImage(selectedBase->ImageIndex()).ToD2D());
+			&Locator::ImageManager->GetImage("bases")->GetClippedImage(0).ToD2D());
 	}
 	for (int d = 0; d < m_basePlacementTiles.size(); d++)
 	{
@@ -198,8 +198,8 @@ void WorldGrid::SetBasePlacementTiles(const Vec2i & mousePos)
 	if (m_cam.PointInViewFrame(mp, Vec2f(0.0f, 0.0f)))
 	{
 
-		int row = mp.y / m_cellHeight;
-		int col = mp.x / m_cellWidth;
+		int row = (int)mp.y / m_cellHeight;
+		int col = (int)mp.x / m_cellWidth;
 		m_basePlacementTiles.clear();
 		for (int r = row; r < row + 2; r++)
 		{
@@ -219,7 +219,7 @@ void WorldGrid::FlushPlacementTiles()
 	m_basePlacementTiles.clear();
 }
 
-bool WorldGrid::SetBase(Vec2i pos, Tile& start_tile)
+bool WorldGrid::SetBase(Vec2i pos, Tile& start_tile, std::vector<Tile*>& exitsPt)
 {
 	if (!m_basePlacementTiles[0]->Passable() || 
 		!m_basePlacementTiles[1]->Passable() || 
@@ -227,10 +227,46 @@ bool WorldGrid::SetBase(Vec2i pos, Tile& start_tile)
 		!m_basePlacementTiles[3]->Passable() )
 		return false;
 
+	// get surrounding passable tiles for each placement
+	// tile.
+	int inc[3] = { -1,0,1 };
+	for (int i = 0; i < 4; i++)
+	{
+		Vec2f pos2 = m_basePlacementTiles[i]->GetWorldPosition();
+		int cc = (int)pos2.x / m_cellWidth;
+		int rr = (int)pos2.y / m_cellHeight;
+		for (int r = 0; r < 3; r++)
+		{
+			for (int c = 0; c < 3; c++)
+			{
+				auto basePlace = std::find(m_basePlacementTiles.begin(), m_basePlacementTiles.end(), &m_cells(rr + inc[r], cc + inc[c]));
+				if (basePlace != m_basePlacementTiles.end())
+					continue;
+
+				auto it = std::find(exitsPt.begin(), exitsPt.end(), &m_cells(rr + inc[r], cc + inc[c]));
+				if (it != exitsPt.end() )
+					continue;
+			
+				if (m_cells(rr + inc[r], cc + inc[c]).Passable())
+				{
+					exitsPt.push_back(&m_cells(rr + inc[r], cc + inc[c]));
+				}
+			}
+		}
+
+	}
+	if (exitsPt.size() == 0)
+	{
+		return false;
+	}
+
+
+
+
 	int row = pos.y / m_cellHeight;
 	int col = pos.x / m_cellWidth;
 	start_tile = m_cells(row, col);
-	m_basePlacementTiles.clear();
+	//m_basePlacementTiles.clear();
 	for (int r = row; r < row + 2; r++)
 	{
 		for (int c = col; c < col + 2; c++)
@@ -239,6 +275,9 @@ bool WorldGrid::SetBase(Vec2i pos, Tile& start_tile)
 			pathFinding.getNode(Vec2i(c, r))->s_style = 0;
 		}
 	}
+
+	
+	m_basePlacementTiles.clear();
 	return true;
 }
 

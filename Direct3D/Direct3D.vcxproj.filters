@@ -126,9 +126,6 @@
     <ClCompile Include="Bases.cpp">
       <Filter>Objects\Bases</Filter>
     </ClCompile>
-    <ClCompile Include="BaseManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
     <ClCompile Include="EntityManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
@@ -156,7 +153,19 @@
     <ClCompile Include="StatusRect.cpp">
       <Filter>Objects\Sprite</Filter>
     </ClCompile>
-    <ClCompile Include="ItemSelector.cpp">
+    <ClCompile Include="CommandBase.cpp">
+      <Filter>Objects\Bases</Filter>
+    </ClCompile>
+    <ClCompile Include="FactoryBase.cpp">
+      <Filter>Objects\Bases</Filter>
+    </ClCompile>
+    <ClCompile Include="TechnologyBase.cpp">
+      <Filter>Objects\Bases</Filter>
+    </ClCompile>
+    <ClCompile Include="RepairBase.cpp">
+      <Filter>Objects\Bases</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseController.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
   </ItemGroup>
@@ -257,9 +266,6 @@
     <ClInclude Include="GameState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BaseManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
     <ClInclude Include="SoundManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
@@ -305,7 +311,22 @@
     <ClInclude Include="Transport.h">
       <Filter>Objects\Game Pieces</Filter>
     </ClInclude>
-    <ClInclude Include="ItemSelector.h">
+    <ClInclude Include="CommandBase.h">
+      <Filter>Objects\Bases</Filter>
+    </ClInclude>
+    <ClInclude Include="FactoryBase.h">
+      <Filter>Objects\Bases</Filter>
+    </ClInclude>
+    <ClInclude Include="TechnologyBase.h">
+      <Filter>Objects\Bases</Filter>
+    </ClInclude>
+    <ClInclude Include="RepairBase.h">
+      <Filter>Objects\Bases</Filter>
+    </ClInclude>
+    <ClInclude Include="Events.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseController.h">
       <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>

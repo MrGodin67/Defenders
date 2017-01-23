@@ -19,6 +19,6 @@ public:
 		:m_grid(grid),m_cam(cam)
 	{
 		m_vehicals.resize(numVehicals);
-		m_vehicals[ship] = MoveableObject()
+		
 	}
 };

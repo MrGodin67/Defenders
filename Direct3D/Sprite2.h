@@ -28,7 +28,7 @@ public:
 		:pFormat(format), pos(pos), color(color), backcolor(backColor), drawBackground(drawBack)
 	{
 		wsprintf(this->text, L"%s", text.c_str());
-	
+		this->pos.left += 2.0f;
 	}
 	virtual ~TextSprite() {}
 	virtual void UpdateText(std::wstring str);
@@ -43,14 +43,13 @@ protected:
 	Extents<float> m_extents;
 	Vec2f m_position;
 	std::vector<float> m_rotAngles;
-	_EntityType m_type;
+	
 public:
 	Sprite() {}
 	Sprite(Animation::RenderDesc& desc,std::vector<int> indices,float interval,
-		std::string imageName, _EntityType type)
+		std::string imageName)
 		:AnimationSequence(desc,indices,interval,imageName),
-		m_extents((desc.drawRect.right - desc.drawRect.left), (desc.drawRect.bottom - desc.drawRect.top)),
-		m_type(type)
+		m_extents((desc.drawRect.right - desc.drawRect.left), (desc.drawRect.bottom - desc.drawRect.top))
 	{
 		m_rotAngles.resize(indices.size());
 		for (size_t c = 0; c < m_rotAngles.size(); c++)
@@ -59,7 +58,7 @@ public:
 			desc.drawRect.top + ((desc.drawRect.bottom - desc.drawRect.top) / 2.0f));
 		m_renderDesc.image = Locator::ImageManager->GetImage(m_imageName)->GetTexture();
 	}
-	_EntityType Type() { return m_type; }
+	
 	virtual void Draw(class Camera& cam)override;
 	virtual void Update(const float& dt)override;
 	

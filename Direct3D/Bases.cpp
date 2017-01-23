@@ -2,126 +2,62 @@
 #include "Graphics.h"
 #include "Camera.h"
 Base::Base(Animation::RenderDesc& desc, std::vector<int> indices, float interval,
-	std::string imageName, _EntityType type,float constructionTime)
-	:Sprite(desc,indices,interval,imageName,type),
-	m_underConstruction(false),
-	m_constuctionTime(constructionTime),
-	m_width(desc.drawRect.right - desc.drawRect.left)
+	std::string imageName, float constructionTime, _BaseTypes type, std::vector<Tile*>& buildingExitPoints)
+	:Sprite(desc,indices,interval,imageName),
+	m_type(type),
+	m_buildingExitPoints(buildingExitPoints)
 {
+	StatusRect::StatusRectDesc status_desc = StatusRect::StatusRectDesc(desc.drawRect,1.0f,D2D1::ColorF(1.0f,1.0f,1.0f));
+	m_status = LifeRect(status_desc, 100.0f, 8.0f);
+	m_buildClock.timer = 0.0f;
+	m_buildClock.buildTime = constructionTime;
 	
 }
 
-void Base::SetPosition(Vec2f pos,float w,float h)
+void Base::Draw(Camera & cam)
 {
-	m_underConstruction = true;
-	m_constuction_Timer = 0.0f;
-	m_width = w; 
-	m_position = pos;
-}
-
-void Base::SetBuildTypes(_EntityType a, _EntityType b, _EntityType c, _EntityType d,int numTypes)
-{
-	m_unitTypes[0] = a;
-	m_unitTypes[1] = b;
-	m_unitTypes[2] = c;
-	m_unitTypes[3] = d;
-	m_numUnitTypes = numTypes;
-
-}
-
-_EntityType * Base::UnitTypes()
-{
-	return &m_unitTypes[0];
-}
-
-void Base::Update(const float & dt)
-{
-	if (m_underConstruction)
-	{
-		if ((m_constuction_Timer += dt) > m_constuctionTime)
-		{
-			m_underConstruction = false;
-			m_active = true;
-			Locator::SoundEngine->Play("constructioncomplete");
-		}
-	}
-	if (m_buildingUnit)
-	{
-		if ((m_build_Timer += dt) > m_buildTime)
-		{
-			m_buildingComplete = true;
-			m_buildingUnit = false;
-		}
-	}
-}
-
-void Base::Draw(Graphics & gfx, Camera &cam)
-{
-	
 	cam.Rasterize(GetDrawable());
-	
-	if (m_underConstruction)
-	{
-		RectF rect = GetRect();
-		float percent = m_constuction_Timer / m_constuctionTime;
-		RectF dr(rect.left, rect.top - 8.0f,
-			rect.left + (m_width * percent), rect.top + 6.0f);
-
-		gfx.DrawFilledScreenRectangle(dr.ToD2D(), D2D1::ColorF(0.0f, 1.0f, 0.0f, 1.0f));
-		gfx.DrawFilledScreenRectangle(rect.ToD2D(), D2D1::ColorF(0.9f, 0.0f, 0.0f, 0.2f));
-
-	}
+	if(m_selected)
+	  cam.Rasterize(m_status.GetDrawable());
 }
 
-void Base::Draw(Graphics & gfx)
+void Base::ConstructNewUnit(_EntityType type, float buildTime)
 {
-	
-	
-	
+	Locator::SoundEngine->Play("unitrequest",0.35f);
+	m_UnitsUnderConstruction.emplace_back(type, buildTime);
 }
 
-std::wstring Base::GetText()
+bool Base::UpdateBuilds(const float & dt)
 {
-	std::wstring Text;
-	if (!m_active)
+	m_Completedbuilds.clear();
+	float dt1 = dt;
+	for (size_t i = 0; i < m_UnitsUnderConstruction.size(); i++)
 	{
-		Text += L"Cost " + std::to_wstring(m_cost) + L"\n";
-	}
-	
-	if (m_underConstruction)
-	{
-		Text += L"Under Constuction [ " + std::to_wstring((int)((m_constuction_Timer / m_constuctionTime) * 100.0f)) + L" ]% complete\n";
-	}
-	for (int c = 0; c < m_numUnitTypes; c++)
-	{
-		switch (m_unitTypes[c])
+		if (m_UnitsUnderConstruction[i].Update(dt1))
 		{
-		case _EntityType::drone:
-			Text += L"Drone : " + std::to_wstring(m_cost) + L" credits\n";
-			break;
-		case _EntityType::fighter:
-			Text += L"Fighter : " + std::to_wstring(m_cost) + L" credits\n";
-			break;
-		case _EntityType::artillary:
-			Text += L"Artillary : " + std::to_wstring(m_cost) + L" credits\n";
-			break;
-		case _EntityType::radar:
-			Text += L"Radar: " + std::to_wstring(m_cost) + L" credits\n";
-			break;
-		case _EntityType::turret:
-			Text += L"Turret: " + std::to_wstring(m_cost) + L" credits\n";
-			break;
-		case _EntityType::tech:
-			Text += L"Technology: " + std::to_wstring(m_cost) + L" credits\n";
-			break;
-		case _EntityType::data:
-			Text += L"Data Storage: " + std::to_wstring(m_cost) + L" credits\n";
-			break;
+			m_Completedbuilds.push_back(m_UnitsUnderConstruction[i].type);
+			m_UnitsUnderConstruction.erase(m_UnitsUnderConstruction.begin() + i);
+			i--;
 		}
 	}
-	
-	//= L"Base Data :\n Cost " + std::to_wstring(100);
-	return Text;
+
+	// return true if size is greater than 0
+	return (m_Completedbuilds.size() > 0);
+}
+
+std::vector<_EntityType> Base::CompletedBuilds()
+{
+	return m_Completedbuilds;
+}
+
+Vec2f Base::GetNextAvaliableExitPosition()
+{
+	for (auto& it : m_buildingExitPoints)
+	{
+		if (it->Passable())
+			return it->GetWorldPosition();
+	}
+
 }
 
 

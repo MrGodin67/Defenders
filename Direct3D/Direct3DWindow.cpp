@@ -17,7 +17,7 @@ Direct3DWindow::Direct3DWindow(int scrnWidth, int scrnHeight)
 	m_input(mouse,kbd)
 {
 	InitializeWindows();
-	
+	kbd.EnableAutorepeat();
 }
 
 
@@ -239,8 +239,8 @@ void Direct3DWindow::InitializeWindows()
 		// If full screen set the screen to maximum size of the users desktop and 32bit.
 		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
 		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
-		dmScreenSettings.dmPelsWidth = (unsigned long)screenWidth2;
-		dmScreenSettings.dmPelsHeight = (unsigned long)screenHeight2;
+		dmScreenSettings.dmPelsWidth = (unsigned long)m_screenWidth;
+		dmScreenSettings.dmPelsHeight = (unsigned long)m_screenHeight;
 		dmScreenSettings.dmBitsPerPel = 32;
 		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 

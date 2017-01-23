@@ -2,24 +2,24 @@
 #include "Sprite2.h"
 #include "SpriteSheet.h"
 #include "Locator.h"
+#include "Tile.h"
+#include "StatusRect.h"
 
+enum _BaseTypes
+{
+	baseCommand,
+	baseFactory,
+	baseTechnology,
+	baseRepair,
+	baseNumBases,
+	baseInvalid
+};
 class Base :public Sprite
 {
-	
-	bool m_active = false;
-	bool m_buildingUnit = false;
-	bool m_buildingComplete = false;
-	bool m_underConstruction = false;
-	_EntityType m_unitTypes[4];
-	_EntityType  m_currentBuildType = none;
-	int m_imageIndex;
-	int m_numUnitTypes = 0;
-	int m_cost = 600;
-	float m_build_Timer = 0.0f;
-	float m_buildTime = 0.0f;
-	float m_constuction_Timer = 0.0f;
-	float m_constuctionTime = 0.0f;
-	float m_width;
+protected:
+	_BaseTypes m_type;
+	LifeRect m_status;
+	bool m_selected = false;
 	class BuildingTypes
 	{
 	public:
@@ -40,42 +40,22 @@ class Base :public Sprite
 		}
 	};
 	std::vector<BuildingTypes> m_UnitsUnderConstruction;
+	std::vector<_EntityType> m_Completedbuilds;
+	std::vector<Tile*> m_buildingExitPoints;
+	BuildingTypes m_buildClock;
 public:
 	Base() {}
 	Base(Animation::RenderDesc& desc, std::vector<int> indices, float interval,
-		std::string imageName, _EntityType type, float constructionTime);
-
-	void SetPosition(Vec2f pos,float w,float h);
-	void SetBuildTypes(_EntityType a, _EntityType b, _EntityType c, _EntityType d, int numTypes);
-	_EntityType* UnitTypes();
-	void Update(const float& dt);
-	void Draw(class Graphics& gfx, class Camera&);
-	void Draw(class Graphics& gfx);
-	int NumUinitTypes() { return m_numUnitTypes; }
-	std::wstring GetText();
-	bool Active() { return m_active; }
-	bool BuildingUnit() { return m_buildingUnit; }
-	bool BuildingCompleted() { return m_buildingComplete; }
-	bool UnderConstruction() { return m_underConstruction; }
-	void BuildUnit(_EntityType type)
-	{
-		m_UnitsUnderConstruction.emplace_back(type, 30.0f);
-	}
-	_EntityType UpdateBuild(float& dt)
-	{
-		for (size_t i=0;i < m_UnitsUnderConstruction.size();i++)
-		{
-			if (m_UnitsUnderConstruction[i].Update(dt))
-			{
-				_EntityType result = m_UnitsUnderConstruction[i].type;
-				m_UnitsUnderConstruction.erase(m_UnitsUnderConstruction.begin() + i);
-				m_buildingUnit = m_UnitsUnderConstruction.size() > 0;
-				return result;
-			}
-		}
-		m_buildingUnit = m_UnitsUnderConstruction.size() > 0;
-		return _EntityType::none;
-	}
-	size_t NumbUnitsUnderConstruction() { return m_UnitsUnderConstruction.size(); }
-	int ImageIndex() { return m_seqIndices[0]; }
+		std::string imageName,float constructionTime, _BaseTypes type, std::vector<Tile*>& buildingExitPoints);
+	_BaseTypes Type() { return m_type; }
+	int NumberOfUnitTypes() { return (int)m_seqIndices.size(); }
+	_EntityType GetType(int index) { return (_EntityType)m_seqIndices[index]; }
+	bool UnitsReady() { return m_Completedbuilds.size() > 0; }
+	virtual void SetSelected(bool val) { m_selected = val; }
+	virtual void Draw(class Camera& cam)override;
+	virtual std::wstring GetText() { return std::wstring(); };
+	virtual void ConstructNewUnit(_EntityType type, float buildTime);
+	virtual bool UpdateBuilds(const float& dt);
+	virtual std::vector<_EntityType> CompletedBuilds();
+	virtual Vec2f GetNextAvaliableExitPosition();
 };
