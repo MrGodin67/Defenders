@@ -86,6 +86,7 @@ public:
 	}
 	void UpdateHealth(float& health);
 	void SetMaxValue(float val) { m_maxValue = val; }
+	float GetMaxValue() { return m_maxValue; }
 	virtual void SetPosition(Vec2f& pos)override;
 	class Drawable : public ::Drawable
 	{

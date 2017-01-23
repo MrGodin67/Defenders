@@ -130,7 +130,8 @@ void BaseController::Draw(Graphics & gfx)
 		D2D1_RECT_F rect = m_basePlacementTiles[0].GetRenderDesc().drawRect;
 		rect.right = rect.left + 128.0f;
 		rect.bottom = rect.top + 128.0f;
-		gfx.DrawSprite(D2D1::Matrix3x2F::Identity(),
+		D2D1_MATRIX_3X2_F mat = D2D1::Matrix3x2F::Translation({ -m_cam.GetPos().x,-m_cam.GetPos().y });
+		gfx.DrawSprite(mat,
 			rect,
 			Locator::ImageManager->GetImage("bases")->GetTexture(),
 			&Locator::ImageManager->GetImage("bases")->GetClippedImage((int)m_selectedBase->type).ToD2D()
@@ -288,7 +289,7 @@ void BaseController::HandleInput()
 	unsigned char numKey[8] = { '1','2','3','4','5','6','7','8' };
 	if (m_selectedBase)
 	{
-		if (m_selectedBase->base)
+		if (m_selectedBase->base && m_selectedBase->base->Active())
 		{
 			for (int c = 0; c < 8; c++)
 			{
@@ -374,8 +375,12 @@ void BaseController::HandleInput()
 						{
 							if (m_selectedBase->children[j].image.PointIn(Vec2f(m_input.MousePosition())))
 							{
-								if (!m_selectedBase->base)
+								if (!m_selectedBase->base )
 									continue;
+								if ( !m_selectedBase->base->Active())
+								{
+									continue;
+								}
 								if (CanBuy(m_selectedBase->children[j].cost))
 								{
 									m_selectedBase->base->ConstructNewUnit(m_selectedBase->children[j].type, 6.0f);

@@ -20,6 +20,8 @@ protected:
 	_BaseTypes m_type;
 	LifeRect m_status;
 	bool m_selected = false;
+	bool m_building = false;
+	float m_buildIndex = 0.0f;
 	class BuildingTypes
 	{
 	public:
@@ -43,11 +45,13 @@ protected:
 	std::vector<_EntityType> m_Completedbuilds;
 	std::vector<Tile*> m_buildingExitPoints;
 	BuildingTypes m_buildClock;
+	void UpdateMainBuild(float dt);
 public:
 	Base() {}
 	Base(Animation::RenderDesc& desc, std::vector<int> indices, float interval,
 		std::string imageName,float constructionTime, _BaseTypes type, std::vector<Tile*>& buildingExitPoints);
 	_BaseTypes Type() { return m_type; }
+	bool Active() { return !m_building; }
 	bool UnitsReady() { return m_Completedbuilds.size() > 0; }
 	virtual void SetSelected(bool val) { m_selected = val; }
 	virtual void Draw(class Camera& cam)override;
