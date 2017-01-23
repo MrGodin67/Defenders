@@ -19,7 +19,7 @@ public:
 	void DrawLine(D2D1_MATRIX_3X2_F &matTrans, D2D1_POINT_2F start, D2D1_POINT_2F end, D2D1_COLOR_F& color, float width);
 	void DrawRectangle(D2D1_MATRIX_3X2_F &matTrans, D2D1_RECT_F& rect, D2D1_COLOR_F& color);
 	void DrawScreenRectangle(D2D1_RECT_F rect, D2D1_COLOR_F& color);
-	void DrawFilledScreenRectangle(D2D1_RECT_F& rect, D2D1_COLOR_F& color);
+	void DrawFilledScreenRectangle(D2D1_RECT_F& rect, D2D1_COLOR_F& color, D2D1_MATRIX_3X2_F *trans = nullptr);
 	void DrawSprite(D2D1_MATRIX_3X2_F &trans, D2D1_RECT_F &PosSize, ID2D1Bitmap *pSprite,
 		D2D1_RECT_F *ClipRect = nullptr,float Opacity = 1.0f,
 		D2D1_BITMAP_INTERPOLATION_MODE InterpMode = D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);

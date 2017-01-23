@@ -48,8 +48,6 @@ public:
 	Base(Animation::RenderDesc& desc, std::vector<int> indices, float interval,
 		std::string imageName,float constructionTime, _BaseTypes type, std::vector<Tile*>& buildingExitPoints);
 	_BaseTypes Type() { return m_type; }
-	int NumberOfUnitTypes() { return (int)m_seqIndices.size(); }
-	_EntityType GetType(int index) { return (_EntityType)m_seqIndices[index]; }
 	bool UnitsReady() { return m_Completedbuilds.size() > 0; }
 	virtual void SetSelected(bool val) { m_selected = val; }
 	virtual void Draw(class Camera& cam)override;

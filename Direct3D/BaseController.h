@@ -62,15 +62,21 @@ public:
 				gfx.DrawFilledScreenRectangle(image.GetRenderDesc().drawRect, D2D1::ColorF(0.0f, 1.0f, 0.4f, 0.4f));
 				gfx.DrawRectangle(D2D1::Matrix3x2F::Identity(), image.GetRenderDesc().drawRect, D2D1::ColorF(1.0f, 1.0f, 1.0f, 1.0f));
 				gfx.Rasterize(image.GetDrawable());
-				for (size_t i = 0; i < numItems; i++)
+				if (base)
 				{
-					gfx.DrawFilledScreenRectangle(children[i].image.GetRenderDesc().drawRect, D2D1::ColorF(0.0f, 1.0f, 0.4f, 0.4f));
-					gfx.Rasterize(children[i].image.GetDrawable());
-					gfx.DrawRectangle(D2D1::Matrix3x2F::Identity(), children[i].image.GetRenderDesc().drawRect, D2D1::ColorF(1.0f, 1.0f, 1.0f, 1.0f));
+					for (size_t i = 0; i < numItems; i++)
+					{
+						gfx.DrawFilledScreenRectangle(children[i].image.GetRenderDesc().drawRect, D2D1::ColorF(0.0f, 1.0f, 0.4f, 0.4f));
+						gfx.Rasterize(children[i].image.GetDrawable());
+						gfx.DrawRectangle(D2D1::Matrix3x2F::Identity(), children[i].image.GetRenderDesc().drawRect, D2D1::ColorF(1.0f, 1.0f, 1.0f, 1.0f));
+					}
 				}
 			}
 			else
+			{
+				
 				gfx.Rasterize(image.GetDrawable());
+			}
 		};
 	};
 public:
@@ -78,6 +84,7 @@ public:
 	~BaseController() {}
 	void Draw(Graphics& gfx);
 	void Update(const float& dt,class UnitManager* unitMgr);
+	Base* SelectedNewBase() { return m_selectedNewBase; }
 private:
 	class Camera& m_cam;
 	class WorldGrid& m_grid;
@@ -90,6 +97,8 @@ private:
 	BaseItem* m_selectedBase = nullptr;
 	bool m_newBaseCreation = false;
 	int credits = 2400;
+	Base* m_selectedNewBase = nullptr;
+	std::vector<StatusRect> m_basePlacementTiles;
 private:
 	bool CreateNewBase(Vec2f placementPt);
 	void HandleInput();

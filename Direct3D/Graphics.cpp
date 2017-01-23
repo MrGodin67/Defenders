@@ -79,10 +79,13 @@ void Graphics::DrawLine(D2D1_MATRIX_3X2_F &matTrans, D2D1_POINT_2F start, D2D1_P
 	m_pD2DRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 };
 //==============================================================================
-void Graphics::DrawFilledScreenRectangle(D2D1_RECT_F& rect, D2D1_COLOR_F& color)
+void Graphics::DrawFilledScreenRectangle(D2D1_RECT_F& rect, D2D1_COLOR_F& color, D2D1_MATRIX_3X2_F *trans)
 {
-	m_pD2DRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-	
+	if(trans)
+	  m_pD2DRenderTarget->SetTransform(trans);
+	else
+		m_pD2DRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+
 	m_pD2DWhiteBrush->SetColor({ color.r,color.g,color.b,color.a });
 	m_pD2DRenderTarget->FillRectangle(&rect, m_pD2DWhiteBrush);
 }

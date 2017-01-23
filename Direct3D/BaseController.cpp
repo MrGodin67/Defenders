@@ -78,6 +78,15 @@ BaseController::BaseController(WorldGrid& grid,InputManager& input,Camera& cam,V
 	m_text["dataDisplay"] = TextSprite(Locator::TextManager->GetFormat("Tahoma14"),
 		textPlace, L"Unit Data : ", D2D1::ColorF(0.0f, 1.0f, 0.0f, 1.0f), D2D1::ColorF(0.0f, 0.0f, 1.0f, 0.2f), false);
 
+	StatusRect::StatusRectDesc sdesc;
+	sdesc.drawRect = { 0.0f,0.0f,64.0f,64.0f };
+	sdesc.color = { 0.0f,1.0f,0.0f,1.0f };
+	sdesc.alphaBlend = 0.8f;
+	sdesc.drawFilled = true;
+	for (int c = 0; c < 4; c++)
+	{
+		m_basePlacementTiles.emplace_back(sdesc);
+	}
 
 }
 void BaseController::Draw(Graphics & gfx)
@@ -112,22 +121,43 @@ void BaseController::Draw(Graphics & gfx)
 	m_text["credits"].UpdateText(L"Credit :" + std::to_wstring(credits));
 	m_text["credits"].Draw(gfx);
 	Locator::TextManager->GetFormat("Tahoma14")->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+	if (m_basePlacementTiles.size() <= 0)
+		return;
+	D2D1_COLOR_F color;
 
+	if (m_newBaseCreation)
+	{
+		D2D1_RECT_F rect = m_basePlacementTiles[0].GetRenderDesc().drawRect;
+		rect.right = rect.left + 128.0f;
+		rect.bottom = rect.top + 128.0f;
+		gfx.DrawSprite(D2D1::Matrix3x2F::Identity(),
+			rect,
+			Locator::ImageManager->GetImage("bases")->GetTexture(),
+			&Locator::ImageManager->GetImage("bases")->GetClippedImage((int)m_selectedBase->type).ToD2D()
+		);
+	
+		for (int d = 0; d < m_basePlacementTiles.size(); d++)
+		{
+			m_cam.Rasterize(m_basePlacementTiles[d].GetDrawable());
+
+		}
+	}
 }
 void BaseController::Update(const float & dt, UnitManager* unitMgr)
 {
-	static float creditMoneyMakerMotherFucker = 0.0f;
-	creditMoneyMakerMotherFucker += dt;
-	if (creditMoneyMakerMotherFucker >= 1.0f)
+	// temp for testing credits
+	static float creditMoneyMaker = 0.0f;
+	creditMoneyMaker += dt;
+	if (creditMoneyMaker >= 1.0f)
 	{
 		credits++;
-		creditMoneyMakerMotherFucker = 0.0f;
+		creditMoneyMaker = 0.0f;
 	}
 	HandleInput();
 	if (m_newBaseCreation)
 	{
-		Vec2f pos(m_input.MousePosition());
-		m_grid.SetBasePlacementTiles(m_cam.ConvertToWorldSpace(pos));
+		//** GET PLACEMENT TILES HERE **
+		m_grid.SetBasePlacementTiles(m_input.MousePosition(),m_basePlacementTiles);
 	}
 	for (size_t i = 0; i < 4; i++)
 	{
@@ -195,6 +225,7 @@ bool BaseController::CreateNewBase(Vec2f placementPt)
 				break;
 			}
 			Locator::SoundEngine->Play("constructionstarted");
+			m_selectedBase->base->SetSelected(true);
 			return true;
 		}
 	}
@@ -286,17 +317,47 @@ void BaseController::HandleInput()
 		}
 		for (size_t i = 0; i < m_bases.size(); i++)
 		{
+			if (m_bases[i].base)
+			{
+				if (m_bases[i].base->GetRect().Contains(m_cam.ConvertToWorldSpace(m_input.MousePosition())))
+				{
+					if (m_selectedBase)
+					{
+						m_selectedBase->selected = false;
+						if (m_selectedBase->base)
+							m_selectedBase->base->SetSelected(false);
+
+					}
+					// assign pointer new selected base
+					m_selectedBase = &m_bases[i];
+					m_selectedBase->selected = true;
+					
+
+					if (m_selectedBase->base)
+						m_selectedBase->base->SetSelected(true);
+					break;
+				}
+			}
 			// check for mouse in frame
 			if (m_bases[i].image.PointIn(Vec2f(m_input.MousePosition())))
 			{
 				// set prevous, if any, selected to false
-				if (m_selectedBase) { m_selectedBase->selected = false; }
-				// assign pointer new selected base
+				if (m_selectedBase) 
+				{ 
+					m_selectedBase->selected = false;
+					if (m_selectedBase->base)
+						m_selectedBase->base->SetSelected(false);
+
+				}
+					// assign pointer new selected base
 				m_selectedBase = &m_bases[i];
 				m_selectedBase->selected = true;
 				if(!m_selectedBase->base)
 				    m_newBaseCreation = controlKey;
 
+				if (m_selectedBase->base)
+					m_selectedBase->base->SetSelected(true);
+				
 				Locator::SoundEngine->Play("select");
 				break;
 			}
@@ -336,7 +397,6 @@ done:
 	rightMouseClick = m_input.RightMouseDown();
 	
 }
-
 bool BaseController::CanBuy(int cost)
 {
 	if (credits - cost >= 0)

@@ -121,7 +121,7 @@ HRESULT Game::RenderScene()
 	switch (m_gameState)
 	{
 	case _GameState::running:
-		m_grid.Draw(gfx, m_cam.GetViewFrame(),nullptr);
+		m_grid.Draw(gfx, m_cam.GetViewFrame());
 	
 		m_unitManager->Draw(gfx);
 		// draw last

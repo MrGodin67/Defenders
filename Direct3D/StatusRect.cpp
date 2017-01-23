@@ -61,7 +61,7 @@ void StatusRect::Drawable::Rasterize(Graphics& gfx)
 	{ m_parent.m_scale.x, m_parent.m_scale.y },
 	{ m_parent.m_center.x,m_parent.m_center.y }));
 	if(m_parent.m_Desc.drawFilled)
-		gfx.DrawFilledScreenRectangle( m_parent.m_Desc.drawRect, m_parent.m_Desc.color);
+		gfx.DrawFilledScreenRectangle( m_parent.m_Desc.drawRect, m_parent.m_Desc.color,&matTrans);
 	else
 		gfx.DrawRectangle(matTrans, m_parent.m_Desc.drawRect, m_parent.m_Desc.color);
 
