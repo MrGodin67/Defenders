@@ -11,10 +11,11 @@ void UnitManager::HandleInput( Mouse::Event& mouse)
 	if (mouse.GetType() == Mouse::Event::LPress)
 	{
 		m_selectedMoveableEntity = nullptr;
+		Vec2f mousePt = Vec2i(mouse.GetPosX(), mouse.GetPosY()) + m_cam.GetPos();
 		for (size_t index = 0;index <  m_playerEntites.size();index++)
 		{
 		
-			if (m_playerEntites[index]->GetRect().Contains(Vec2i(mouse.GetPosX(),mouse.GetPosY())))
+			if (m_playerEntites[index]->GetRect().Contains(mousePt))
 			{
 				switch (m_playerEntites[index]->Type())
 				{

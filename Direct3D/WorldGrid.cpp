@@ -195,8 +195,8 @@ void WorldGrid::SetBasePlacementTiles(const Vec2i & mousePos)
 {
 	Vec2f mp = Vec2f(mousePos);
 	mp +=  m_cam.GetPos();
-	if (m_cam.PointInViewFrame(mp, Vec2f(0.0f, 0.0f)))
-	{
+	//if (m_cam.PointInViewFrame(Vec2f(mousePos), Vec2f(0.0f, 0.0f)))
+	//{
 
 		int row = (int)mp.y / m_cellHeight;
 		int col = (int)mp.x / m_cellWidth;
@@ -205,13 +205,13 @@ void WorldGrid::SetBasePlacementTiles(const Vec2i & mousePos)
 		{
 			for (int c = col; c < col + 2; c++)
 			{
-				
+				if(m_cells(r, c).Passable())
 					m_basePlacementTiles.push_back(&m_cells(r, c));
 					
 				
 			}
 		}
-	}
+	//}
 }
 
 void WorldGrid::FlushPlacementTiles()

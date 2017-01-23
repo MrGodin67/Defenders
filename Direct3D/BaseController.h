@@ -89,7 +89,7 @@ private:
 	Animation m_hud;
 	BaseItem* m_selectedBase = nullptr;
 	bool m_newBaseCreation = false;
-	int credits = 400;
+	int credits = 2400;
 private:
 	bool CreateNewBase(Vec2f placementPt);
 	void HandleInput();

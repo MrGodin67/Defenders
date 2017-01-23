@@ -82,14 +82,20 @@ BaseController::BaseController(WorldGrid& grid,InputManager& input,Camera& cam,V
 }
 void BaseController::Draw(Graphics & gfx)
 {
-	gfx.DrawFilledScreenRectangle(m_border.ToD2D(), D2D1::ColorF(0.1f, 0.6f, 0.0f, 0.4f));
-	gfx.Rasterize(m_hud.GetDrawable());
 	for (int c = 0; c < m_bases.size(); c++)
 	{
-		m_bases[c].Draw(gfx);
 		if (m_bases[c].base)
 			m_bases[c].base->Draw(m_cam);
 	}
+	gfx.DrawFilledScreenRectangle(m_border.ToD2D(), D2D1::ColorF(0.1f, 0.6f, 0.0f, 0.4f));
+
+	for (int c = 0; c < m_bases.size(); c++)
+	{
+		m_bases[c].Draw(gfx);
+		
+	}
+	gfx.Rasterize(m_hud.GetDrawable());
+	
 	Locator::TextManager->GetFormat("Tahoma14")->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 
 	if (m_selectedBase)
@@ -290,6 +296,7 @@ void BaseController::HandleInput()
 				if(!m_selectedBase->base)
 				    m_newBaseCreation = controlKey;
 
+				Locator::SoundEngine->Play("select");
 				break;
 			}
 			if (!m_newBaseCreation)
