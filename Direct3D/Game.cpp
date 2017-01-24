@@ -116,7 +116,7 @@ HRESULT Game::ConstructScene(const float& deltaTime)
 HRESULT Game::RenderScene()
 {
 	HRESULT hr;
-	hr = gfx.BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+	hr = gfx.BeginScene(0.0f, 0.0f, 0.1f, 1.0f);
 	if (FAILED(hr)) { return hr; }
 	switch (m_gameState)
 	{
