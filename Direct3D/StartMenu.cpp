@@ -91,7 +91,7 @@ StartMenu::StartMenu(Vec2f screenCenter, float width, float height)
 	TechRects[2].text = L"  Collect as much enemy technology as you can. Constuct it by combining scripts,found on data storage units, along with hardware found amongst the enemy wreckage. You can then sell it to enterprises that can further enhance it's capabilities, or you may choose to use the technology to upgrade your units. Rest assured, everything has it's price..";
 	
 	HowTo.textPos = { border.left + 328.0f,border.top + 80.0f,border.right - 80.0f,border.bottom - 80.0f };
-	HowTo.text = L"  Press Control + left mouse button to select Units\\Bases to place in world. \nLeft click units then right click to move them";
+	HowTo.text = L"  Press Control + left mouse button to select Units\\Bases to place in world. \nLeft click units then right click to move them\nW,A,S,D to scroll map";
 
 
 
