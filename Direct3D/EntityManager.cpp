@@ -63,7 +63,7 @@ UnitManager::UnitManager(InputManager& input, WorldGrid& world, Camera & cam, st
 	m_life.emplace_back(desc, 100.0f,8.0f);
 }
 
-void UnitManager::AddPlayerUnit(_EntityType type, Vec2i pos)
+MoveableObject* UnitManager::AddPlayerUnit(_EntityType type, Vec2i pos)
 {
 	Animation::RenderDesc rDesc;
 	
@@ -98,7 +98,19 @@ void UnitManager::AddPlayerUnit(_EntityType type, Vec2i pos)
 		indices.push_back(4);
 		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid, rDesc, indices, 0.25f, "player_units", speeds[0], turret));
 		break;
+	case tech:
+		indices.push_back(5);
+		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid, rDesc, indices, 0.25f, "player_units", 0.0f, tech));
+		break;
+	case _EntityType::data:
+		indices.push_back(6);
+		m_playerEntites.push_back(std::make_unique<MoveableObject>(m_grid, rDesc, indices, 0.25f, "player_units", 0.0f, _EntityType::data));
+		break;
+		default:
+			return nullptr;
+			break;
 	}
+	return m_playerEntites.back().get();
 }
 
 void UnitManager::AddEnemyUnit(_EntityType type, Vec2i pos)

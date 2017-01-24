@@ -171,6 +171,7 @@
     <ClCompile Include="RepairBase.cpp" />
     <ClCompile Include="SimpleTimer.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="SoundEffect.cpp" />
     <ClCompile Include="Sprite2.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="StartMenu.cpp" />

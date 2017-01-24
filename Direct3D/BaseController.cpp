@@ -174,10 +174,12 @@ void BaseController::Update(const float & dt, UnitManager* unitMgr)
 					for (size_t j = 0; j < ent.size(); j++)
 					{
 						Vec2f pp = base->GetNextAvaliableExitPosition();
+						
 						pp /= 64.0f;
 						unitMgr->AddPlayerUnit(ent[j], Vec2i(pp));
 					}
-					Locator::SoundEngine->Play("newunitsavailable");
+					Locator::SoundEngine->AddToQueue("newunitsavailable");
+					//Locator::SoundEngine->Play("newunitsavailable");
 				}
 			}
 		}
@@ -225,12 +227,100 @@ bool BaseController::CreateNewBase(Vec2f placementPt)
 				return false;
 				break;
 			}
-			Locator::SoundEngine->Play("constructionstarted");
+			Locator::SoundEngine->AddToQueue("constructionstarted");
+			//Locator::SoundEngine->Play("constructionstarted");
 			m_selectedBase->base->SetSelected(true);
 			return true;
 		}
 	}
 	return false;
+}
+void BaseController::HandleBaseSelection(BaseItem & base)
+{
+	if (base.base)
+	{
+		if (base.base->GetRect().Contains(m_cam.ConvertToWorldSpace(m_input.MousePosition())))
+		{
+			if (m_selectedBase)
+			{
+				m_selectedBase->selected = false;
+				if (m_selectedBase->base)
+					m_selectedBase->base->SetSelected(false);
+
+			}
+			// assign pointer new selected base
+			m_selectedBase = &base;
+			m_selectedBase->selected = true;
+
+
+			if (m_selectedBase->base)
+			{
+				m_selectedBase->base->SetSelected(true);
+			}
+			return;
+		}
+	}
+	if (base.image.PointIn(Vec2f(m_input.MousePosition())))
+	{
+		// set prevous, if any, selected to false
+		if (m_selectedBase)
+		{
+			m_selectedBase->selected = false;
+			if (m_selectedBase->base)
+				m_selectedBase->base->SetSelected(false);
+
+		}
+		// assign pointer new selected base
+		m_selectedBase = &base;
+		m_selectedBase->selected = true;
+		if (!m_selectedBase->base)
+			m_newBaseCreation = m_input.KeyPress(VK_CONTROL);
+
+		if (m_selectedBase->base)
+		{
+			m_selectedBase->base->SetSelected(true);
+		}
+
+		Locator::SoundEngine->Play("select");
+		
+	}
+}
+void BaseController::HandleItemSelection()
+{
+	if (!m_newBaseCreation)
+	{
+
+		if (m_selectedBase)
+		{
+			if (!m_selectedBase->base)
+				return;
+			if (!m_selectedBase->base->Active())
+			{
+				return;
+			}
+			if (m_selectedBase->base->ActiveBuilds() > 0)
+				return;
+			for (size_t j = 0; j < m_selectedBase->children.size(); j++)
+			{
+				// check bases child nodes to see if we selected an item
+				if (m_input.KeyPress(VK_CONTROL))// only if key is presses as well
+				{
+					if (m_selectedBase->children[j].image.PointIn(Vec2f(m_input.MousePosition())))
+					{
+
+						if (CanBuy(m_selectedBase->children[j].cost))
+						{
+							m_selectedBase->base->ConstructNewUnit(m_selectedBase->children[j].type, 6.0f);
+
+							
+							return;
+						}
+					}
+				}
+			}
+
+		}
+	}
 }
 void BaseController::HandleInput()
 {
@@ -289,19 +379,22 @@ void BaseController::HandleInput()
 	unsigned char numKey[8] = { '1','2','3','4','5','6','7','8' };
 	if (m_selectedBase)
 	{
-		if (m_selectedBase->base && m_selectedBase->base->Active())
+		if (m_selectedBase->base )
 		{
-			for (int c = 0; c < 8; c++)
+			if (m_selectedBase->base->Active()&& m_selectedBase->base->ActiveBuilds() == 0)
 			{
-				if ((e_kbd.GetCode() == numKey[c]) && e_kbd.IsRelease())
+				for (int c = 0; c < 8; c++)
 				{
-					if (c < m_selectedBase->children.size())
+					if ((e_kbd.GetCode() == numKey[c]) && e_kbd.IsRelease())
 					{
-						if (CanBuy(m_selectedBase->children[c].cost))
+						if (c < m_selectedBase->children.size())
 						{
-							m_selectedBase->base->ConstructNewUnit(m_selectedBase->children[c].type, 6.0f);
+							if (CanBuy(m_selectedBase->children[c].cost))
+							{
+								m_selectedBase->base->ConstructNewUnit(m_selectedBase->children[c].type, 6.0f);
+							}
+							break;
 						}
-						break;
 					}
 				}
 			}
@@ -317,86 +410,12 @@ void BaseController::HandleInput()
 			return;
 		}
 		for (size_t i = 0; i < m_bases.size(); i++)
-		{
-			if (m_bases[i].base)
-			{
-				if (m_bases[i].base->GetRect().Contains(m_cam.ConvertToWorldSpace(m_input.MousePosition())))
-				{
-					if (m_selectedBase)
-					{
-						m_selectedBase->selected = false;
-						if (m_selectedBase->base)
-							m_selectedBase->base->SetSelected(false);
-
-					}
-					// assign pointer new selected base
-					m_selectedBase = &m_bases[i];
-					m_selectedBase->selected = true;
-					
-
-					if (m_selectedBase->base)
-						m_selectedBase->base->SetSelected(true);
-					break;
-				}
-			}
-			// check for mouse in frame
-			if (m_bases[i].image.PointIn(Vec2f(m_input.MousePosition())))
-			{
-				// set prevous, if any, selected to false
-				if (m_selectedBase) 
-				{ 
-					m_selectedBase->selected = false;
-					if (m_selectedBase->base)
-						m_selectedBase->base->SetSelected(false);
-
-				}
-					// assign pointer new selected base
-				m_selectedBase = &m_bases[i];
-				m_selectedBase->selected = true;
-				if(!m_selectedBase->base)
-				    m_newBaseCreation = controlKey;
-
-				if (m_selectedBase->base)
-					m_selectedBase->base->SetSelected(true);
-				
-				Locator::SoundEngine->Play("select");
-				break;
-			}
-			if (!m_newBaseCreation)
-			{
-				
-				if (m_selectedBase)
-				{
-					
-					for (size_t j = 0; j < m_selectedBase->children.size(); j++)
-					{
-						// check bases child nodes to see if we selected an item
-						if (controlKey)// only if key is presses as well
-						{
-							if (m_selectedBase->children[j].image.PointIn(Vec2f(m_input.MousePosition())))
-							{
-								if (!m_selectedBase->base )
-									continue;
-								if ( !m_selectedBase->base->Active())
-								{
-									continue;
-								}
-								if (CanBuy(m_selectedBase->children[j].cost))
-								{
-									m_selectedBase->base->ConstructNewUnit(m_selectedBase->children[j].type, 6.0f);
-									goto done;
-									break;
-								}
-							}
-						}
-					}
-					
-				}
-			}
-			
+		{		
+			HandleBaseSelection(m_bases[i]);
 		}
+		HandleItemSelection();
 	}
-done:
+
 	// set to current state
 	leftMouseClick = m_input.LeftMouseDown();
 	rightMouseClick = m_input.RightMouseDown();
@@ -408,7 +427,8 @@ bool BaseController::CanBuy(int cost)
 		credits -= cost;
 	else
 	{
-		Locator::SoundEngine->Play("notenoughcredit",0.25f);
+		Locator::SoundEngine->AddToQueue("notenoughcredit");
+		//Locator::SoundEngine->Play("notenoughcredit",0.25f);
 		return false;
 	}
 	return true;

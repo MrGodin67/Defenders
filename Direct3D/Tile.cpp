@@ -17,10 +17,6 @@ void Tile::Draw(Camera& cam)
 {
 	cam.Rasterize(GetDrawable());
 	
-	
-
-	D2D1_COLOR_F color = D2D1::ColorF(0.08f, 0.08f, 0.08f, m_colorAlphaBlend);
-	//gfx.DrawFilledScreenRectangle(m_visibleRect.ToD2D(), color);
 }
 
 RectF Tile::GetRect()
@@ -38,13 +34,14 @@ Vec2f Tile::GetWorldPosition()
 
 void Tile::SetVisibleColorAlpha(float alpha)
 {
-	if(alpha < m_colorAlphaBlend)
-	   m_colorAlphaBlend = alpha;
+	if (alpha > m_renderDesc.opague)
+		m_renderDesc.opague = alpha;
+	 //  m_colorAlphaBlend = alpha;
 }
 
 float Tile::GetVisibleColorAplha()
 {
-	return m_colorAlphaBlend;
+	return m_renderDesc.opague;
 }
 
 

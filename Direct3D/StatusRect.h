@@ -65,6 +65,7 @@ protected:
 	float m_width;
 	float m_position = 0.0f;
 	D2D1_COLOR_F m_meterColor;
+	D2D1_COLOR_F m_fillColor = { 0.0f,0.7f,0.0f,0.5f };
 	float m_lineWidth = 1.0f;
 	D2D1_POINT_2F m_linePt[2];
 public:
@@ -86,6 +87,8 @@ public:
 	}
 	void UpdateHealth(float& health);
 	void SetMaxValue(float val) { m_maxValue = val; }
+	void SetFillColor(D2D1_COLOR_F c) { m_fillColor = c; }
+	void DrawFilled(bool val) { m_Desc.drawFilled = val; }
 	float GetMaxValue() { return m_maxValue; }
 	virtual void SetPosition(Vec2f& pos)override;
 	class Drawable : public ::Drawable

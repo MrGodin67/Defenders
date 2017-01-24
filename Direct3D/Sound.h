@@ -139,6 +139,7 @@ public:
 	void Play( float freqMod = 1.0f,float vol = 1.0f );
 	void StopOne();
 	void StopAll();
+	bool IsPlaying();
 	~Sound();
 private:	
 	Sound( const std::wstring & fileName,bool detectLooping,bool manualLooping,

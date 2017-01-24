@@ -59,6 +59,7 @@ public:
 		sounds[0].Play(1.0f, vol);
 		//sounds[soundDist( rng )].Play( exp2( freqDist( rng ) ),vol );
 	}
+	bool IsPlaying(const size_t& index);
 private:
 	std::uniform_int_distribution<unsigned int> soundDist;
 	std::normal_distribution<float> freqDist;

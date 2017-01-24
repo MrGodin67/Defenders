@@ -53,6 +53,7 @@ public:
 	_BaseTypes Type() { return m_type; }
 	bool Active() { return !m_building; }
 	bool UnitsReady() { return m_Completedbuilds.size() > 0; }
+	int ActiveBuilds() { return (int)m_UnitsUnderConstruction.size(); }
 	virtual void SetSelected(bool val) { m_selected = val; }
 	virtual void Draw(class Camera& cam)override;
 	virtual std::wstring GetText() { return std::wstring(); };

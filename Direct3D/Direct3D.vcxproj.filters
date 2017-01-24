@@ -168,6 +168,9 @@
     <ClCompile Include="BaseController.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="SoundEffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Direct3DWindow.h">

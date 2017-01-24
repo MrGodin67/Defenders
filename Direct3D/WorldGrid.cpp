@@ -38,6 +38,7 @@ void WorldGrid::Create(std::vector<std::string>& map)
 			desc.drawRect = D2D1::RectF(p.x, p.y, p.x + m_cellWidth, p.y + m_cellHeight);
 			desc.image = sprite->GetTexture();
 			desc.angle = 0.0f;
+			desc.opague = 0.09f;
 			switch (str[c])
 			{
 			case ' ':
@@ -128,7 +129,7 @@ void WorldGrid::LoadMap(const std::string& mapfile, const std::wstring& textureF
 	m_cellWidth = atoi(tokens[4].c_str());
 	m_cellHeight = atoi(tokens[5].c_str());
 	Tile::SetWidthHeight((float)m_cellWidth, (float)m_cellHeight);
-	m_visibleMaxLenSq = ((float)Tile::Width() * 7.0f) * ((float)Tile::Width() * 7.0f);
+	m_visibleMaxLenSq = ((float)Tile::Width() * 5.0f) * ((float)Tile::Width() * 5.0f);
 	m_cells.resize(m_rows, m_columns);
 	mapText.erase(mapText.begin());
 	
@@ -297,12 +298,14 @@ void WorldGrid::SetVisibility(Vec2i pos)
 			c1 = col + m_visibliltyArray[c];
 			if (c1 < 0)c1 = 0;
 			if (c1 >= m_columns)c1 = m_columns -1;
-			if (m_cells(r1, c1).GetVisibleColorAplha() != 0.0f)
+			if (m_cells(r1, c1).GetVisibleColorAplha() != 1.0f)
 			{
 				float lenSq = (m_cells(r1, c1).GetWorldPosition() - pos).LenSq();
 				float alpha = lenSq / m_visibleMaxLenSq;
-				if (alpha < 0.1f)alpha = 0.0f;
-				if (alpha > 1.0f)alpha = 1.0f;
+				
+				alpha = 1.0f - alpha;
+				if (alpha > 0.9f)
+					alpha = 1.0f;
 				m_cells(r1, c1).SetVisibleColorAlpha(alpha);
 			}
 		}

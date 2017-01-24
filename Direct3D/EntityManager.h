@@ -23,7 +23,7 @@ class UnitManager
 public:
 	UnitManager(InputManager& input,WorldGrid& world,Camera& cam, std::wstring imageFile);
 	~UnitManager() {}
-	void AddPlayerUnit(_EntityType type, Vec2i pos);
+	MoveableObject* AddPlayerUnit(_EntityType type, Vec2i pos);
 	void AddEnemyUnit(_EntityType type, Vec2i pos);
 	void SelectUnit(Vec2f world);
 	void Update(const float& dt,Mouse::Event& mouse);

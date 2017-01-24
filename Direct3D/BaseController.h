@@ -96,11 +96,13 @@ private:
 	Animation m_hud;
 	BaseItem* m_selectedBase = nullptr;
 	bool m_newBaseCreation = false;
-	int credits = 2400;
+	int credits = 2300;
 	Base* m_selectedNewBase = nullptr;
 	std::vector<StatusRect> m_basePlacementTiles;
 private:
 	bool CreateNewBase(Vec2f placementPt);
+	void HandleBaseSelection(BaseItem& base);
+	void HandleItemSelection();
 	void HandleInput();
 	bool CanBuy(int cost);
 };

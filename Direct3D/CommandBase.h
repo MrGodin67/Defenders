@@ -10,4 +10,5 @@ public:
 		std::vector<Tile*>& buildingExitPoints);
 	virtual std::wstring GetText()override;
 	virtual void Update(const float& dt)override;
+	
 };

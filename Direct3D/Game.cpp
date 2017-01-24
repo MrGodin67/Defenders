@@ -49,7 +49,7 @@ HRESULT Game::ConstructScene(const float& deltaTime)
 	{
 	case _GameState::running:
 	{		
-		
+		Locator::SoundEngine->PlayQueue();
 		HandleUserEvents(e_mouse);
 		m_controller->Update(deltaTime, m_unitManager.get());
 		m_unitManager->Update(deltaTime, e_mouse);
@@ -242,8 +242,8 @@ void Game::HandleUserEvents(Mouse::Event mouse)
 			m_gameState = _GameState::paused;
 		}
 
-		
-		m_cam.Scroll(scroll);
+		if(scroll != Vec2f(0.0f,0.0f))
+		   m_cam.Scroll(scroll);
 	}
 	
 	

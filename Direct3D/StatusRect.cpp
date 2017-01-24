@@ -129,6 +129,11 @@ void LifeRect::Drawable::Rasterize(Graphics& gfx)
 	Transform(D2D1::Matrix3x2F::Scale(
 	{ m_parent.m_scale.x, m_parent.m_scale.y },
 	{ m_parent.m_center.x,m_parent.m_center.y }));
+	if (m_parent.m_Desc.drawFilled)
+	{
+		gfx.DrawFilledScreenRectangle( m_parent.m_Desc.drawRect, m_parent.m_fillColor, &matTrans);
+
+	}
 	gfx.DrawRectangle(matTrans, m_parent.m_Desc.drawRect, m_parent.m_Desc.color);
 	gfx.DrawLine(matTrans,m_parent.m_linePt[0],m_parent.m_linePt[1], m_parent.m_meterColor, m_parent.m_lineWidth);
 

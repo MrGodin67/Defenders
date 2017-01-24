@@ -61,6 +61,7 @@ void Camera::Resize(float& w, float& h)
 
 void Camera::UpdatePosition(Vec2f& in_pos)
 {
+	
 	pos = in_pos - center ;
 	
 	pos.x = __max(pos.x, mapFrame.left);

@@ -605,6 +605,13 @@ void Sound::StopAll()
 	}
 }
 
+bool Sound::IsPlaying()
+{
+	std::lock_guard<std::mutex> lock(mutex);
+	return activeChannelPtrs.size() != 0;
+	
+}
+
 Sound::~Sound()
 {
 	// make sure nobody messes with our shit (also needed for cv.wait())
